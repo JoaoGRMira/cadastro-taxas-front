@@ -1,2 +1,2 @@
-# cadastro-taxas-front
- Front da tela de cadastro de taxas atualizado
+# front-cadastro-taxas
+ Front da página de cadastro de taxas

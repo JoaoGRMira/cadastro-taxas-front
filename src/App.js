@@ -1,21 +1,17 @@
-import React from 'react';
-import {
-	BrowserRouter,
-	Routes,
-	Route
-} from 'react-router-dom';
-import { Sidebar } from './components';
-import * as Views from './views';
+import './App.css';
+import Sobretaxa from './view/Sobretaxa';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Sobretaxa2 from './view/Sobretaxa2';
 
-export default function App() {
-	return <>
-		<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<Sidebar/>}>
-					<Route index element={<Views.CadastroTaxa/>}/>
-					{/* <Route path='/alocacao' element={<Views.AlocacaoEventoPdv/>}/> */}
-				</Route>
-			</Routes>
-		</BrowserRouter>
-	</>
-};
+function App() {
+  return (
+    <BrowserRouter>
+    <Routes>
+      <Route path='/1' element={<Sobretaxa2 />}></Route>
+      <Route path='/' element={<Sobretaxa />}></Route>
+    </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
