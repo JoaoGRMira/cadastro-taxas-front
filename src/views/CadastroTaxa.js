@@ -476,7 +476,7 @@ export default function CadastroTaxa() {
 						</Paper>
 					</Grid>
 					<Grid item xs={12} md={12} lg={12}>
-						<Paper>
+						<Paper sx={{ mb: 3 }}>
 							<TableContainer>
 								<Typography variant="h6" component="div" sx={{ padding: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold', color: 'var(--blue)' }}>
 									<EventAvailableIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -0.5 }} />
