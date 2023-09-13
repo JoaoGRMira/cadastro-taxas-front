@@ -101,8 +101,14 @@ export default function CadastroTaxa() {
 	const [evento, setEvento] = useState(null);
 	const [eventosList, setEventosList] = useState([]);
 	const [classesList, setClassesList] = useState([]);
+	const [parcelaOpcao, setParcelaOpcao] = useState([]);
+	const [parcelasList, setParcelasList] = useState([]);
 
 	const [taxaPadrao, setTaxaPadrao] = useState('0,00');
+
+	const [valorMinParcela, setValorMinParcela] = useState('0,00');
+
+	const [numMaxParcelas, setNumMaxParcelas] = useState('0');
 
 	const [dinheiro, setDinheiro] = useState('0,00');
 	const [dinheiro_perc, setDinheiro_perc] = useState(0);
@@ -199,6 +205,23 @@ export default function CadastroTaxa() {
 
 		return () => { execute = false; }
 	}, [eventosList]);
+
+	useEffect(() => {
+		let execute = true;
+
+		axios.get('parcela')
+			.then(resp => {
+				if (!parcelasList.length && execute) {
+					setParcelasList(resp.data.map(a => ({
+						value: a,
+						label: a.par_valor_min
+					})));
+				}
+			});
+
+		return () => { execute = false; }
+	}, [parcelasList]);
+	console.log(parcelasList)
 
 	/**
 	 * @param {{
@@ -420,16 +443,17 @@ export default function CadastroTaxa() {
 		</>
 	}
 
+	console.log(parcelaOpcao)
 	return <>
 		<Box sx={{ display: 'flex' }}>
 			<Container maxWidth="xl" sx={{ mt: 4 }}>
 				<Grid container spacing={3}>
-					<Grid item xs={12} md={12} lg={12}>
+					<Grid item xs={12} md={12} lg={7}>
 						<Paper sx={{ p: 2 }}>
 							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
 								Sobretaxa de Ingresso
 							</Typography>
-							<Divider sx={{ my: 2, mx: 50, backgroundColor: 'var(--blue)' }} />
+							<Divider sx={{ my: 2, mx: 20, backgroundColor: 'var(--blue)' }} />
 							<Grid container spacing={3}>
 								<Grid item xs={12} md={6} lg={6}>
 									<Typography variant="body" component='div' sx={{ padding: 2, pb: 2, fontWeight: 'bold' }}>
@@ -471,6 +495,77 @@ export default function CadastroTaxa() {
 								</Grid>
 								<Grid item xs={12} sx={{ textAlign: 'center' }}>
 									<Button variant="contained" type='submit' disabled={loading || !evento} onClick={saveTaxa} sx={{ mt: 2, width: 100 }}>{loading ? 'Salvando...' : 'Salvar'}</Button>
+								</Grid>
+							</Grid>
+						</Paper>
+					</Grid>
+					<Grid item xs={12} md={12} lg={5}>
+						<Paper sx={{ p: 2 }}>
+							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
+								Parcelas
+							</Typography>
+							<Divider sx={{ my: 2, mx: 20, backgroundColor: 'var(--blue)' }} />
+							<Grid container spacing={3}>
+								<Grid item xs={12} md={12} lg={12}>
+									<Typography variant="body" component='div' sx={{ padding: 2, pb: 2, fontWeight: 'bold' }}>
+										<CalendarTodayIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -0.5 }} />
+										Parcelas:
+									</Typography>
+									<FormControl sx={{ width: '100%', height: 50 }}>
+										<DropdownList
+											data={parcelasList}
+											value={parcelaOpcao}
+											placeholder={'Selecionar Parcela...'}
+											disabled={!parcelasList.length}
+											onChangeHandler={parcelaOpcao => {
+												setParcelaOpcao(parcelaOpcao);
+											}}
+										/>
+									</FormControl>
+								</Grid>
+								<Grid item xs={12} md={6} lg={6}>
+									<Typography variant="body" component='div' sx={{ padding: 2.5, pb: 2, fontWeight: 'bold' }}>
+										<LocalActivityIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -1 }} />
+										Valor Mínimo:
+									</Typography>
+									<TextField
+										id="outlined-basic"
+										variant="outlined"
+										style={{ width: '100%', height: 50 }}
+										InputLabelProps={{ shrink: true }}
+										value={(parcelaOpcao.value && parcelaOpcao.value.par_valor_min) || valorMinParcela}
+										onChange={(a) => {
+											let value = a.target.value;
+											setValorMinParcela(value);
+											if (parcelaOpcao.value) {
+												parcelaOpcao.value.par_valor_min = value;
+											}
+										}}
+									/>
+								</Grid>
+								<Grid item xs={12} md={6} lg={6}>
+									<Typography variant="body" component='div' sx={{ padding: 2.5, pb: 2, fontWeight: 'bold' }}>
+										<LocalActivityIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -1 }} />
+										Máximo de Parcelas:
+									</Typography>
+									<TextField
+										id="outlined-basic"
+										variant="outlined"
+										style={{ width: '100%', height: 50 }}
+										InputLabelProps={{ shrink: true }}
+										value={(parcelaOpcao.value && parcelaOpcao.value.par_count) || numMaxParcelas}
+										onChange={(a) => {
+											let value = a.target.value;
+											setNumMaxParcelas(value);
+											if (parcelaOpcao.value) {
+												parcelaOpcao.value.par_count = value;
+											}
+										}}
+									/>
+								</Grid>
+								<Grid item xs={12} sx={{ textAlign: 'center' }}>
+									<Button variant="contained" type='submit' disabled={loading || !evento} onClick={saveTaxa} sx={{ m: 2, width: 100 }}>{loading ? 'Salvando...' : 'Salvar'}</Button>
+									<Button variant="contained" type='submit' disabled={loading || !evento} onClick={saveTaxa} sx={{ m: 2, width: 100 }}>{loading ? 'Deletando...' : 'Deletar'}</Button>
 								</Grid>
 							</Grid>
 						</Paper>
