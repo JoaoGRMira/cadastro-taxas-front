@@ -7,6 +7,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { styled } from '@mui/material/styles';
+import { Delete } from '@mui/icons-material';
 const axios = Connection()
 
 export default function CadastroTaxa() {
@@ -481,6 +482,7 @@ export default function CadastroTaxa() {
 		<Box sx={{ display: 'flex' }}>
 			<Container maxWidth="xl" sx={{ mt: 4 }}>
 				<Grid container spacing={3}>
+					{/* Área de Sobretaza */ }
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ p: 2 }}>
 							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
@@ -535,6 +537,7 @@ export default function CadastroTaxa() {
 							</Grid>
 						</Paper>
 					</Grid>
+					{/* Tabela de Taxas */ }
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ mb: 3 }}>
 							<TableContainer>
@@ -725,6 +728,7 @@ export default function CadastroTaxa() {
 							</TableContainer>
 						</Paper>
 					</Grid>
+					{/* Área de Regras de Parcelas*/ }
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ p: 2 }}>
 							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
@@ -805,6 +809,7 @@ export default function CadastroTaxa() {
 							</Grid>
 						</Paper>
 					</Grid>
+					{/* Tabela de Regras de Parcelas */}
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ mb: 3 }}>
 							<TableContainer>
@@ -816,12 +821,22 @@ export default function CadastroTaxa() {
 									<TableHead>
 										{/* header da tabela de taxas */}
 										<StyledTableRow>
+											<StyledTableHeaderCell align="center">ID da Regra</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Valor Mínimo</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Quantidade de Parcelas</StyledTableHeaderCell>
+											<StyledTableHeaderCell align="center">Excluir</StyledTableHeaderCell>
 										</StyledTableRow>
 									</TableHead>
 									<TableBody>
 										<TableRow>
+											{/* Valor Mínimo */}
+											<TableCell align="center">
+												<TextField
+													label="ID"
+													variant="outlined"
+													//value={}
+												/>
+											</TableCell>
 											{/* Valor Mínimo */}
 											<TableCell align="center">
 												<TextField
@@ -833,15 +848,49 @@ export default function CadastroTaxa() {
 											{/* Quantidade de parcelas */}
 											<TableCell align='center'>
 												<TextField
-													label="Valor R$"
+													label="Parcelas"
 													variant="outlined"
 													//value={}
+												/>
+											</TableCell>
+											<TableCell align='center'>
+												<Delete style={{ cursor: 'pointer' }}
 												/>
 											</TableCell>
 										</TableRow>
 									</TableBody>
 								</Table>
 							</TableContainer>
+						</Paper>
+					</Grid>
+					{/* Gerador de senha */}
+					<Grid item xs={12} md={12} lg={12}>
+						<Paper sx={{ p: 2, pb: 4, mb: 2 }}>
+							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
+								Gerador de Senhas Provisórias
+							</Typography>
+							<Divider sx={{ my: 2, mx: 20, backgroundColor: 'var(--blue)' }} />
+							<Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+								<Grid item xs={12} md={12} lg={12}>
+									<Typography variant="body" component='div' sx={{ padding: 2.5, pb: 2, fontWeight: 'bold' }}>
+										<LocalActivityIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -1 }} />
+										Senha Provisória:
+									</Typography>
+									{/* campo de valor mínimo por parcela */}
+									<TextField
+										id="outlined-basic"
+										variant="outlined"
+										style={{ width: '100%', height: 50 }}
+										InputLabelProps={{ shrink: true }}
+										disabled
+										//value={}
+									/>
+								</Grid>
+								<Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'center' }}>
+									{/* botão de salvar parcela */}
+									<Button variant="contained" type='submit' disabled={loading || !parcelaOpcao} onClick={saveParcela} sx={{ m: 2, width: 100 }}>{loading ? 'Gerando...' : 'Gerar'}</Button>
+								</Grid>
+							</Grid>
 						</Paper>
 					</Grid>
 				</Grid>
