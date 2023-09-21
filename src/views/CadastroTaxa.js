@@ -170,18 +170,15 @@ export default function CadastroTaxa() {
 	/**
 	 * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e 
 	 */
-	function saveParcela(e) {
-		e.preventDefault();
-
-		setLoading(true);
-		axios.post('parcela', {par_id: parcelaOpcao.par_id, par_count: parcelaOpcao.par_count, par_valor_min: parcelaOpcao.par_valor_min })
-			.then(resp => {
-				if (resp.data) {
-					alert('Parcela Salva')
-				}
-			})
-			.finally(() => setLoading(false));
-	}
+	const criarRegraParcela = async (dadosRegraParcela) => {
+		try {
+			const response = await axios.post('/parcela', dadosRegraParcela);
+			return response.data;
+		} catch (error) {
+			console.error('Erro ao criar regra de parcela:', error);
+			throw error;
+		}
+	};
 
 	/**
 	 * @param {number} parcelaOpcao 
@@ -196,7 +193,7 @@ export default function CadastroTaxa() {
 				})));
 			})
 			.finally(() => setParcelaLoading(false));
-		}
+	}
 
 	/**
 	 * @param {number} evento 
@@ -485,7 +482,7 @@ export default function CadastroTaxa() {
 		<Box sx={{ display: 'flex' }}>
 			<Container maxWidth="xl" sx={{ mt: 4 }}>
 				<Grid container spacing={3}>
-					{/* Área de Sobretaza */ }
+					{/* Área de Sobretaza */}
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ p: 2 }}>
 							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
@@ -540,7 +537,7 @@ export default function CadastroTaxa() {
 							</Grid>
 						</Paper>
 					</Grid>
-					{/* Tabela de Taxas */ }
+					{/* Tabela de Taxas */}
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ mb: 3 }}>
 							<TableContainer>
@@ -731,7 +728,7 @@ export default function CadastroTaxa() {
 							</TableContainer>
 						</Paper>
 					</Grid>
-					{/* Área de Regras de Parcelas*/ }
+					{/* Área de Regras de Parcelas*/}
 					<Grid item xs={12} md={12} lg={12}>
 						<Paper sx={{ p: 2 }}>
 							<Typography variant="h5" component="div" align="center" sx={{ paddingTop: 2, px: 2, fontFamily: '"Century Gothic", Futura, sans-serif', fontWeight: 'bold' }} gutterBottom>
@@ -783,7 +780,30 @@ export default function CadastroTaxa() {
 								</Grid>
 								<Grid item xs={12} sx={{ textAlign: 'center' }}>
 									{/* botão de salvar parcela */}
-									<Button variant="contained" type='submit' disabled={loading || !parcelaOpcao} onClick={saveParcela} sx={{ m: 2, width: 100 }}>{loading ? 'Salvando...' : 'Salvar'}</Button>
+									<Button
+										variant="contained"
+										type='submit'
+										disabled={loading || !parcelaOpcao}
+										onClick={() => {
+											const dadosRegraParcela = {
+												//par_id: parcelaOpcao.value.par_id,
+												par_count: numMaxParcelas,
+												par_valor_min: valorMinParcela,
+											};
+											criarRegraParcela(dadosRegraParcela)
+												.then((resposta) => {
+													// Lidar com a resposta da criação da regra de parcela, se necessário
+													console.log('Regra de parcela criada:', resposta);
+												})
+												.catch((erro) => {
+													// Lidar com erros na criação da regra de parcela, se necessário
+													console.error('Erro ao criar regra de parcela:', erro);
+												});
+										}}
+										sx={{ m: 2, width: 100 }}
+									>
+										{loading ? 'Salvando...' : 'Salvar'}
+									</Button>
 								</Grid>
 								<Grid item xs={12} md={12} lg={12}>
 									<Typography variant="body" component='div' sx={{ px: 2, pb: 2, fontWeight: 'bold' }}>
@@ -831,36 +851,40 @@ export default function CadastroTaxa() {
 										</StyledTableRow>
 									</TableHead>
 									<TableBody>
-										<TableRow>
-											{/* Valor Mínimo */}
-											<TableCell align="center">
-												<TextField
-													label="ID"
-													variant="outlined"
-													//value={}
-												/>
-											</TableCell>
-											{/* Valor Mínimo */}
-											<TableCell align="center">
-												<TextField
-													label="Valor R$"
-													variant="outlined"
-													//value={}
-												/>
-											</TableCell>
-											{/* Quantidade de parcelas */}
-											<TableCell align='center'>
-												<TextField
-													label="Parcelas"
-													variant="outlined"
-													//value={}
-												/>
-											</TableCell>
-											<TableCell align='center'>
-												<Delete style={{ cursor: 'pointer' }}
-												/>
-											</TableCell>
-										</TableRow>
+										{parcelasList.map((parcela, index) => (
+											<TableRow key={index}>
+												{/* ID da Regra */}
+												<TableCell align="center">
+													<TextField
+														label="ID"
+														variant="outlined"
+														disabled
+														value={parcela.value.par_id}
+													/>
+												</TableCell>
+												{/* Valor Mínimo */}
+												<TableCell align="center">
+													<TextField
+														label="Valor R$"
+														variant="outlined"
+														disabled
+														value={parcela.value.par_valor_min}
+													/>
+												</TableCell>
+												{/* Quantidade de parcelas */}
+												<TableCell align="center">
+													<TextField
+														label="Parcelas"
+														variant="outlined"
+														disabled
+														value={parcela.value.par_count}
+													/>
+												</TableCell>
+												<TableCell align="center">
+													<Delete style={{ cursor: 'pointer' }} />
+												</TableCell>
+											</TableRow>
+										))}
 									</TableBody>
 								</Table>
 							</TableContainer>
@@ -886,12 +910,12 @@ export default function CadastroTaxa() {
 										style={{ width: '100%', height: 50 }}
 										InputLabelProps={{ shrink: true }}
 										disabled
-										//value={}
+									//value={}
 									/>
 								</Grid>
 								<Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'center' }}>
-									{/* botão de salvar parcela */}
-									<Button variant="contained" type='submit' disabled={loading || !parcelaOpcao} onClick={saveParcela} sx={{ m: 2, width: 100 }}>{loading ? 'Gerando...' : 'Gerar'}</Button>
+									{/* botão de gerar senha */}
+									<Button variant="contained" type='submit' disabled={loading || !parcelaOpcao} sx={{ m: 2, width: 100 }}>{loading ? 'Gerando...' : 'Gerar'}</Button>
 								</Grid>
 							</Grid>
 						</Paper>
