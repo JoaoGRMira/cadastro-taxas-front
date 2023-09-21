@@ -11,6 +11,7 @@ import { Delete } from '@mui/icons-material';
 const axios = Connection()
 
 export default function CadastroTaxa() {
+	//Estilos da tabela
 	const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
 		[`&.${tableCellClasses.head}`]: {
 			backgroundColor: theme.palette.common.white,
@@ -66,6 +67,7 @@ export default function CadastroTaxa() {
 		borderBottom: '1px solid var(--grey-shadow)',
 	}));
 
+	//Estilos da célula da tabela
 	const StyledTableCell = styled(TableCell)(({ theme }) => ({
 		[`&.${tableCellClasses.head}`]: {
 			backgroundColor: theme.palette.common.white,
@@ -80,6 +82,7 @@ export default function CadastroTaxa() {
 		width: '200px',
 	}));
 
+	//Estilos da linha da tabela
 	const StyledTableRow = styled(TableRow)(({ theme }) => ({
 		'&:nth-of-type(odd)': {
 			backgroundColor: 'var(--grey-shadow)',
@@ -242,7 +245,7 @@ export default function CadastroTaxa() {
 
 	useEffect(() => {
 		let execute = true;
-
+		//Consulta os dados de parcela e armazena no useState
 		axios.get('parcela')
 			.then(resp => {
 				if (!parcelasList.length && execute) {
