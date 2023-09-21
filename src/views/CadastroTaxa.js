@@ -751,9 +751,6 @@ export default function CadastroTaxa() {
 										onChange={(a) => {
 											let value = a.target.value;
 											setValorMinParcela(value);
-											if (parcelaOpcao.value) {
-												parcelaOpcao.value.par_valor_min = value;
-											}
 										}}
 									/>
 								</Grid>
@@ -772,9 +769,6 @@ export default function CadastroTaxa() {
 										onChange={(a) => {
 											let value = a.target.value;
 											setNumMaxParcelas(value);
-											if (parcelaOpcao.value) {
-												parcelaOpcao.value.par_count = value;
-											}
 										}}
 									/>
 								</Grid>
@@ -810,24 +804,6 @@ export default function CadastroTaxa() {
 										<CalendarTodayIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -0.5 }} />
 										Parcelas:
 									</Typography>
-									<FormControl sx={{ width: '100%', height: 50, marginBottom: 5 }}>
-										{/* dropdown seleção de parcelas existentes */}
-										<DropdownList
-											data={parcelasList}
-											value={parcelaOpcao}
-											placeholder={'Selecionar Parcela...'}
-											disabled={!parcelasList.length}
-											onChangeHandler={parcelaOpcao => {
-												setParcelaOpcao(parcelaOpcao);
-												if (parcelaOpcao !== null) {
-													getParcelas(parcelaOpcao?.value.eve_cod);
-												}
-												else {
-													setRegraParcela([]);
-												}
-											}}
-										/>
-									</FormControl>
 								</Grid>
 							</Grid>
 						</Paper>
