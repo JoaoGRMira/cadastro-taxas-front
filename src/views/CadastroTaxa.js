@@ -799,12 +799,6 @@ export default function CadastroTaxa() {
 										{loading ? 'Salvando...' : 'Salvar'}
 									</Button>
 								</Grid>
-								<Grid item xs={12} md={12} lg={12}>
-									<Typography variant="body" component='div' sx={{ px: 2, pb: 2, fontWeight: 'bold' }}>
-										<CalendarTodayIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -0.5 }} />
-										Parcelas:
-									</Typography>
-								</Grid>
 							</Grid>
 						</Paper>
 					</Grid>
