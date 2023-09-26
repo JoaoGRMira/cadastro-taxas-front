@@ -7,7 +7,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { styled } from '@mui/material/styles';
-import { Delete } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 const axios = Connection()
 
 export default function CadastroTaxa() {
@@ -101,18 +101,18 @@ export default function CadastroTaxa() {
 
 	const [loading, setLoading] = useState(false);
 	const [classe_loading, setClasseLoading] = useState(false);
-	const [parcela_loading, setParcelaLoading] = useState(false);
+	//const [parcela_loading, setParcelaLoading] = useState(false);
 
 	const [evento, setEvento] = useState(null);
 	const [eventosList, setEventosList] = useState([]);
 	const [classesList, setClassesList] = useState([]);
 	const [parcelaOpcao, setParcelaOpcao] = useState([]);
-	const [regraParcela, setRegraParcela] = useState([]);
+	//const [regraParcela, setRegraParcela] = useState([]);
 	const [parcelasList, setParcelasList] = useState([]);
 
 	const [taxaPadrao, setTaxaPadrao] = useState('0,00');
 
-	const [idParcela, setIdParcela] = useState('')
+	//const [idParcela, setIdParcela] = useState('')
 	const [valorMinParcela, setValorMinParcela] = useState('0,00');
 	const [numMaxParcelas, setNumMaxParcelas] = useState('0');
 
@@ -180,9 +180,30 @@ export default function CadastroTaxa() {
 		}
 	};
 
+	const atualizarRegraParcela = async (dadosRegraParcela) => {
+		try {
+			const response = await axios.put('/parcela', dadosRegraParcela);
+			return response.data;
+		} catch (error) {
+			console.error('Erro ao atualizar regra de parcela:', error);
+			throw error;
+		}
+	};
+
+	const deletarRegraParcela = async (idRegraParcela) => {
+		try {
+			const response = await axios.delete(`/parcela?id=${idRegraParcela}`);
+			return response.data;
+		} catch (error) {
+			console.error('Erro ao deletar regra de parcela:', error);
+			throw error;
+		}
+	};
+
 	/**
 	 * @param {number} parcelaOpcao 
 	 */
+	/*
 	function getParcelas(parcelaOpcao) {
 		setParcelaLoading(true);
 		axios.post('parcela', { parcelaOpcao })
@@ -194,6 +215,7 @@ export default function CadastroTaxa() {
 			})
 			.finally(() => setParcelaLoading(false));
 	}
+	*/
 
 	/**
 	 * @param {number} evento 
@@ -477,7 +499,9 @@ export default function CadastroTaxa() {
 		</>
 	}
 
-	console.log(parcelaOpcao)
+	//console.log(parcelaOpcao)
+	console.log(numMaxParcelas)
+	console.log(valorMinParcela)
 	return <>
 		<Box sx={{ display: 'flex' }}>
 			<Container maxWidth="xl" sx={{ mt: 4 }}>
@@ -747,10 +771,14 @@ export default function CadastroTaxa() {
 										variant="outlined"
 										style={{ width: '100%', height: 50 }}
 										InputLabelProps={{ shrink: true }}
+										//(parcelaOpcao.value && parcelaOpcao.value.par_valor_min) ||
 										value={(parcelaOpcao.value && parcelaOpcao.value.par_valor_min) || valorMinParcela}
 										onChange={(a) => {
 											let value = a.target.value;
 											setValorMinParcela(value);
+											if (parcelaOpcao.value) {
+												parcelaOpcao.value.par_valor_min = value;
+											}
 										}}
 									/>
 								</Grid>
@@ -765,10 +793,14 @@ export default function CadastroTaxa() {
 										variant="outlined"
 										style={{ width: '100%', height: 50 }}
 										InputLabelProps={{ shrink: true }}
+										//(parcelaOpcao.value && parcelaOpcao.value.par_count) ||
 										value={(parcelaOpcao.value && parcelaOpcao.value.par_count) || numMaxParcelas}
 										onChange={(a) => {
 											let value = a.target.value;
 											setNumMaxParcelas(value);
+											if (parcelaOpcao.value) {
+												parcelaOpcao.value.par_count = value;
+											}
 										}}
 									/>
 								</Grid>
@@ -777,26 +809,67 @@ export default function CadastroTaxa() {
 									<Button
 										variant="contained"
 										type='submit'
-										disabled={loading || !parcelaOpcao}
+										//disabled={loading || !parcelaOpcao}
 										onClick={() => {
 											const dadosRegraParcela = {
-												//par_id: parcelaOpcao.value.par_id,
-												par_count: numMaxParcelas,
 												par_valor_min: valorMinParcela,
+												par_count: numMaxParcelas
 											};
 											criarRegraParcela(dadosRegraParcela)
 												.then((resposta) => {
-													// Lidar com a resposta da criação da regra de parcela, se necessário
 													console.log('Regra de parcela criada:', resposta);
 												})
 												.catch((erro) => {
-													// Lidar com erros na criação da regra de parcela, se necessário
 													console.error('Erro ao criar regra de parcela:', erro);
 												});
+											console.log(dadosRegraParcela)
 										}}
 										sx={{ m: 2, width: 100 }}
 									>
-										{loading ? 'Salvando...' : 'Salvar'}
+										{/*{loading ? 'Salvando...' : 'Salvar'}*/} Criar
+									</Button>
+								</Grid>
+								<Grid item xs={12} md={12} lg={12}>
+									<Typography variant="body" component='div' sx={{ px: 2, pb: 2, fontWeight: 'bold' }}>
+										<CalendarTodayIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -0.5 }} />
+										Parcelas:
+									</Typography>
+									<FormControl sx={{ width: '100%', height: 50, marginBottom: 5 }}>
+										{/* dropdown seleção de parcelas existentes */}
+										<DropdownList
+											data={parcelasList}
+											value={parcelaOpcao}
+											placeholder={'Selecionar Parcela...'}
+											disabled={!parcelasList.length}
+											onChangeHandler={parcelaOpcao => {
+												setParcelaOpcao(parcelaOpcao);
+											}}
+										/>
+									</FormControl>
+								</Grid>
+								<Grid item xs={12} sx={{ textAlign: 'center' }}>
+									{/* botão de editar parcela */}
+									<Button
+										variant="contained"
+										type='submit'
+										//disabled={loading || !parcelaOpcao}
+										onClick={() => {
+											const editarRegraParcela = {
+												par_valor_min: valorMinParcela,
+												par_count: numMaxParcelas
+											};
+											criarRegraParcela(editarRegraParcela)
+												.then((resposta) => {
+													console.log('Regra de parcela criada:', resposta);
+												})
+												.catch((erro) => {
+													console.error('Erro ao criar regra de parcela:', erro);
+												});
+											console.log(editarRegraParcela)
+										}}
+										sx={{ m: 2, width: 100 }}
+									>
+										{/*{loading ? 'Salvando...' : 'Salvar'}*/} Editar
 									</Button>
 								</Grid>
 							</Grid>
@@ -817,6 +890,7 @@ export default function CadastroTaxa() {
 											<StyledTableHeaderCell align="center">ID da Regra</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Valor Mínimo</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Quantidade de Parcelas</StyledTableHeaderCell>
+											<StyledTableHeaderCell align="center">Editar</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Excluir</StyledTableHeaderCell>
 										</StyledTableRow>
 									</TableHead>
@@ -837,8 +911,11 @@ export default function CadastroTaxa() {
 													<TextField
 														label="Valor R$"
 														variant="outlined"
-														disabled
 														value={parcela.value.par_valor_min}
+														onChange={(a) => {
+															let value = a.target.value;
+															setValorMinParcela(value);
+														}}
 													/>
 												</TableCell>
 												{/* Quantidade de parcelas */}
@@ -846,12 +923,47 @@ export default function CadastroTaxa() {
 													<TextField
 														label="Parcelas"
 														variant="outlined"
-														disabled
 														value={parcela.value.par_count}
+														onChange={(a) => {
+															let value = a.target.value;
+															setNumMaxParcelas(value);
+														}}
 													/>
 												</TableCell>
 												<TableCell align="center">
-													<Delete style={{ cursor: 'pointer' }} />
+													<Edit style={{ cursor: 'pointer' }}
+														onClick={() => {
+															const dadosRegraParcela = {
+																par_id: parcela.value.par_id,
+																par_valor_min: valorMinParcela,
+																par_count: numMaxParcelas
+															};
+															atualizarRegraParcela(dadosRegraParcela)
+																.then((resposta) => {
+																	console.log('Regra de parcela atualizada:', resposta);
+																})
+																.catch((erro) => {
+																	console.error('Erro ao atualizar regra de parcela:', erro);
+																});
+															console.log(dadosRegraParcela)
+														}}
+													/>
+												</TableCell>
+												<TableCell align="center">
+													<Delete style={{ cursor: 'pointer' }}
+														onClick={() => {
+															const idRegraParcela = parcela.value.par_id;
+															deletarRegraParcela(idRegraParcela)
+																.then((resposta) => {
+																	console.log('Regra de parcela deletada:', resposta);
+															
+																})
+																.catch((erro) => {
+																	console.error('Erro ao deletar regra de parcela:', erro);
+																});
+															console.log(idRegraParcela)
+														}}
+													/>
 												</TableCell>
 											</TableRow>
 										))}
@@ -885,7 +997,8 @@ export default function CadastroTaxa() {
 								</Grid>
 								<Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'center' }}>
 									{/* botão de gerar senha */}
-									<Button variant="contained" type='submit' disabled={loading || !parcelaOpcao} sx={{ m: 2, width: 100 }}>{loading ? 'Gerando...' : 'Gerar'}</Button>
+									{/*disabled={loading || !parcelaOpcao}*/}
+									<Button variant="contained" type='submit' sx={{ m: 2, width: 100 }}>{loading ? 'Gerando...' : 'Gerar'}</Button>
 								</Grid>
 							</Grid>
 						</Paper>
