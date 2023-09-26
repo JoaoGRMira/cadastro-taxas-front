@@ -819,6 +819,7 @@ export default function CadastroTaxa() {
 											criarRegraParcela(dadosRegraParcela)
 												.then((resposta) => {
 													console.log('Regra de parcela criada:', resposta);
+													window.location.reload()
 												})
 												.catch((erro) => {
 													console.error('Erro ao criar regra de parcela:', erro);
@@ -863,6 +864,7 @@ export default function CadastroTaxa() {
 											atualizarRegraParcela(editarRegraParcela)
 												.then((resposta) => {
 													console.log('Regra de parcela atualizada:', resposta);
+													window.location.reload()
 												})
 												.catch((erro) => {
 													console.error('Erro ao atualizar regra de parcela:', erro);
@@ -958,6 +960,7 @@ export default function CadastroTaxa() {
 															deletarRegraParcela(idRegraParcela)
 																.then((resposta) => {
 																	console.log('Regra de parcela deletada:', resposta);
+																	window.location.reload()
 															
 																})
 																.catch((erro) => {
