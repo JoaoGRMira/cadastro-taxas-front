@@ -499,9 +499,10 @@ export default function CadastroTaxa() {
 		</>
 	}
 
-	//console.log(parcelaOpcao)
+	/*console.log(parcelaOpcao)
+	console.log(parcelaOpcao.value.par_id)
 	console.log(numMaxParcelas)
-	console.log(valorMinParcela)
+	console.log(valorMinParcela)*/
 	return <>
 		<Box sx={{ display: 'flex' }}>
 			<Container maxWidth="xl" sx={{ mt: 4 }}>
@@ -855,15 +856,16 @@ export default function CadastroTaxa() {
 										//disabled={loading || !parcelaOpcao}
 										onClick={() => {
 											const editarRegraParcela = {
+												par_id: parcelaOpcao.value.par_id,
 												par_valor_min: valorMinParcela,
 												par_count: numMaxParcelas
 											};
-											criarRegraParcela(editarRegraParcela)
+											atualizarRegraParcela(editarRegraParcela)
 												.then((resposta) => {
-													console.log('Regra de parcela criada:', resposta);
+													console.log('Regra de parcela atualizada:', resposta);
 												})
 												.catch((erro) => {
-													console.error('Erro ao criar regra de parcela:', erro);
+													console.error('Erro ao atualizar regra de parcela:', erro);
 												});
 											console.log(editarRegraParcela)
 										}}
@@ -890,7 +892,7 @@ export default function CadastroTaxa() {
 											<StyledTableHeaderCell align="center">ID da Regra</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Valor Mínimo</StyledTableHeaderCell>
 											<StyledTableHeaderCell align="center">Quantidade de Parcelas</StyledTableHeaderCell>
-											<StyledTableHeaderCell align="center">Editar</StyledTableHeaderCell>
+											{/*<StyledTableHeaderCell align="center">Editar</StyledTableHeaderCell>*/}
 											<StyledTableHeaderCell align="center">Excluir</StyledTableHeaderCell>
 										</StyledTableRow>
 									</TableHead>
@@ -930,7 +932,7 @@ export default function CadastroTaxa() {
 														}}
 													/>
 												</TableCell>
-												<TableCell align="center">
+												{/*<TableCell align="center">
 													<Edit style={{ cursor: 'pointer' }}
 														onClick={() => {
 															const dadosRegraParcela = {
@@ -948,7 +950,7 @@ export default function CadastroTaxa() {
 															console.log(dadosRegraParcela)
 														}}
 													/>
-												</TableCell>
+												</TableCell> */}
 												<TableCell align="center">
 													<Delete style={{ cursor: 'pointer' }}
 														onClick={() => {
