@@ -210,6 +210,17 @@ export default function CadastroTaxa() {
 		}
 	};
 
+	const genPass = async (radioOption) => {
+		try {
+			const response = await axios.get(`/gen_pass?tipo=${radioOption}`);
+			setSenha(response.data.senha)
+    		return senha;
+		} catch (error) {
+			console.error('Erro ao gerar senha:', error);
+			throw error;
+		}
+	};
+
 	/**
 	 * @param {number} parcelaOpcao 
 	 */
@@ -289,7 +300,7 @@ export default function CadastroTaxa() {
 	}, [parcelasList]);
 	console.log(parcelasList)
 
-	useEffect(() => {
+	/*useEffect(() => {
 		let execute = true;
 		// Consulta os dados de senha e armazena no useState
 		axios.get(`gen_pass?tipo=${selectedOption}`)
@@ -307,7 +318,7 @@ export default function CadastroTaxa() {
 		}
 	  }, [selectedOption]);
 	  
-	console.log(senha)
+	console.log(senha)*/
 
 	/**
 	 * @param {{
@@ -1047,7 +1058,17 @@ export default function CadastroTaxa() {
 								<Grid item xs={12} md={12} lg={12} sx={{ textAlign: 'center' }}>
 									{/* botão de gerar senha */}
 									{/*disabled={loading || !parcelaOpcao}*/}
-									<Button variant="contained" type='submit' sx={{ m: 2, width: 100 }}>{loading ? 'Gerando...' : 'Gerar'}</Button>
+									{/*{loading ? 'Gerando...' : 'Gerar'}*/}
+									<Button variant="contained" type='submit' onClick={() => {
+											const radioOption = selectedOption
+											genPass(radioOption)
+												.then((resposta) => {
+													console.log('Senha gerada:', resposta);
+												})
+												.catch((erro) => {
+													console.error('Erro ao gerar senha:', erro);
+												});
+										}} sx={{ m: 2, width: 100 }}>Gerar</Button>
 								</Grid>
 							</Grid>
 						</Paper>
