@@ -190,9 +190,9 @@ export default function CadastroTaxa() {
 		}
 	};
 
-	const atualizarRegraParcela = async (dadosRegraParcela) => {
+	const atualizarRegraParcela = async (editarRegraParcela) => {
 		try {
-			const response = await axios.put('/parcela', dadosRegraParcela);
+			const response = await axios.put('/parcela', editarRegraParcela);
 			return response.data;
 		} catch (error) {
 			console.error('Erro ao atualizar regra de parcela:', error);
