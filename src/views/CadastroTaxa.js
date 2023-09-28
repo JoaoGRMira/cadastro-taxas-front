@@ -8,6 +8,9 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { styled } from '@mui/material/styles';
 import { Delete, Edit } from '@mui/icons-material';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
 const axios = Connection()
 
 export default function CadastroTaxa() {
@@ -132,6 +135,13 @@ export default function CadastroTaxa() {
 
 	const [parcela, setParcela] = useState('0,00');
 	const [parcela_perc, setParcela_perc] = useState(0);
+
+	const [selectedOption, setSelectedOption] = useState('cancelar'); // Estado para controlar a opção selecionada
+	const [senha, setSenha] = useState(null); // Estado para controlar a opção selecionada
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
 	const limite_parcelas = useMemo(() => {
 		if (classesList.length > 0) {
@@ -278,6 +288,26 @@ export default function CadastroTaxa() {
 		return () => { execute = false; }
 	}, [parcelasList]);
 	console.log(parcelasList)
+
+	useEffect(() => {
+		let execute = true;
+		// Consulta os dados de senha e armazena no useState
+		axios.get(`gen_pass?tipo=${selectedOption}`)
+		  .then(resp => {
+			if (execute) {
+			  setSenha(resp.data.senha);
+			}
+		  })
+		  .catch(error => {
+			console.error(error);
+		  });
+	  
+		return () => {
+		  execute = false;
+		}
+	  }, [selectedOption]);
+	  
+	console.log(senha)
 
 	/**
 	 * @param {{
@@ -499,6 +529,7 @@ export default function CadastroTaxa() {
 		</>
 	}
 
+	console.log(selectedOption)
 	/*console.log(parcelaOpcao)
 	console.log(parcelaOpcao.value.par_id)
 	console.log(numMaxParcelas)
@@ -985,16 +1016,29 @@ export default function CadastroTaxa() {
 							</Typography>
 							<Divider sx={{ my: 2, mx: 20, backgroundColor: 'var(--blue)' }} />
 							<Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+								<RadioGroup
+									row
+									aria-label="Opções"
+									name="opcoes"
+									value={selectedOption}
+									onChange={handleOptionChange}
+									sx={{ justifyContent: 'center', mt: 5 }}
+									>
+									<FormControlLabel value="Cancelamento" control={<Radio />} label="Cancelamento" />
+									<FormControlLabel value="Configurações" control={<Radio />} label="Configurações" />
+									<FormControlLabel value="Reimpressão" control={<Radio />} label="Reimpressão" />
+								</RadioGroup>
 								<Grid item xs={12} md={12} lg={12}>
-									<Typography variant="body" component='div' sx={{ padding: 2.5, pb: 2, fontWeight: 'bold' }}>
+									<Typography variant="body" component='div' sx={{ padding: 2.5, pb: 2, pt: 1,fontWeight: 'bold' }}>
 										<LocalActivityIcon sx={{ color: 'var(--blue)', marginRight: 1, marginBottom: -1 }} />
 										Senha Provisória:
 									</Typography>
-									{/* campo de valor mínimo por parcela */}
+									{/* campo de senha provisória */}
 									<TextField
 										id="outlined-basic"
 										variant="outlined"
 										style={{ width: '100%', height: 50 }}
+										value={senha}
 										InputLabelProps={{ shrink: true }}
 										disabled
 									//value={}
