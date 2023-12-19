@@ -11,7 +11,9 @@ export default function App() {
 	return <>
 		<BrowserRouter>
 			<Routes>
-				<Route path='/' element={<Sidebar/>}>
+				<Route path='/' element={<Views.Login/>}>
+				</Route>
+				<Route path='/cadastro-taxas' element={<Sidebar/>}>
 					<Route index element={<Views.CadastroTaxa/>}/>
 					{/* <Route path='/alocacao' element={<Views.AlocacaoEventoPdv/>}/> */}
 				</Route>
