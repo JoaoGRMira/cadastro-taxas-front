@@ -1,6 +1,6 @@
 // fakeUsers.js
 const mockUsers = [
-    { login: 'usuario', senha: '1234' },
+    { login: 'adminqi', senha: '!Q@W#E$R%T' },
   ];
   
   export default mockUsers;
