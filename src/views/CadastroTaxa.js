@@ -30,34 +30,34 @@ export default function CadastroTaxa() {
 				minWidth: '200px',
 			},
 			'&:nth-of-type(4)': {
-				minWidth: '100px',
+				minWidth: '150px',
 			},
 			'&:nth-of-type(5)': {
 				minWidth: '50px',
 			},
 			'&:nth-of-type(6)': {
-				minWidth: '100px',
+				minWidth: '150px',
 			},
 			'&:nth-of-type(7)': {
 				minWidth: '50px',
 			},
 			'&:nth-of-type(8)': {
-				minWidth: '100px',
+				minWidth: '150px',
 			},
 			'&:nth-of-type(9)': {
 				minWidth: '50px',
 			},
 			'&:nth-of-type(10)': {
-				minWidth: '100px',
+				minWidth: '150px',
 			},
 			'&:nth-of-type(11)': {
 				minWidth: '50px',
 			},
 			'&:nth-of-type(12)': {
-				minWidth: '100px',
+				minWidth: '150px',
 			},
 			'&:nth-of-type(13)': {
-				minWidth: '100px',
+				minWidth: '150px',
 			},
 			'&:nth-of-type(14)': {
 				minWidth: '50px',
@@ -252,6 +252,7 @@ export default function CadastroTaxa() {
 			})
 			.finally(() => setClasseLoading(false));
 	}
+	//console.log(classesList)
 
 	/**
 	 * @param {string} local 
@@ -298,7 +299,7 @@ export default function CadastroTaxa() {
 
 		return () => { execute = false; }
 	}, [parcelasList]);
-	console.log(parcelasList)
+	//console.log(parcelasList)
 
 	/*useEffect(() => {
 		let execute = true;
@@ -339,7 +340,7 @@ export default function CadastroTaxa() {
 			{/* Taxa */}
 			<TableCell align='center'>
 				<TextField
-					label="Valor R$"
+					label="Valor"
 					variant="outlined"
 					value={percent ? `${taxa} %` : `R$ ${taxa}`}
 					onChange={a => {
@@ -540,7 +541,7 @@ export default function CadastroTaxa() {
 		</>
 	}
 
-	console.log(selectedOption)
+	//console.log(selectedOption)
 	/*console.log(parcelaOpcao)
 	console.log(parcelaOpcao.value.par_id)
 	console.log(numMaxParcelas)
@@ -638,7 +639,7 @@ export default function CadastroTaxa() {
 											{/* Dinheiro */}
 											<TableCell align="center">
 												<TextField
-													label="Valor R$"
+													label="Valor"
 													variant="outlined"
 													value={dinheiro_perc ? `${dinheiro} %` : `R$ ${dinheiro}`}
 													onChange={a => {
@@ -661,7 +662,7 @@ export default function CadastroTaxa() {
 											{/* Crédito */}
 											<TableCell align='center'>
 												<TextField
-													label="Valor R$"
+													label="Valor"
 													variant="outlined"
 													value={credito_perc ? `${credito} %` : `R$ ${credito}`}
 													onChange={a => {
@@ -684,7 +685,7 @@ export default function CadastroTaxa() {
 											{/* Débito */}
 											<TableCell align='center'>
 												<TextField
-													label="Valor R$"
+													label="Valor"
 													variant="outlined"
 													value={debito_perc ? `${debito} %` : `R$ ${debito}`}
 													onChange={a => {
@@ -707,7 +708,7 @@ export default function CadastroTaxa() {
 											{/* PIX */}
 											<TableCell align='center'>
 												<TextField
-													label="Valor R$"
+													label="Valor"
 													variant="outlined"
 													value={pix_perc ? `${pix} %` : `R$ ${pix}`}
 													onChange={a => {
@@ -757,7 +758,7 @@ export default function CadastroTaxa() {
 											{/* Taxa Parcela */}
 											<TableCell align='center'>
 												<TextField
-													label="Valor R$"
+													label="Valor"
 													variant="outlined"
 													value={parcela_perc ? `${parcela} %` : `R$ ${parcela}`}
 													onChange={a => {
@@ -955,7 +956,7 @@ export default function CadastroTaxa() {
 												{/* Valor Mínimo */}
 												<TableCell align="center">
 													<TextField
-														label="Valor R$"
+														label="Valor"
 														variant="outlined"
 														value={parcela.value.par_valor_min}
 														onChange={(a) => {
