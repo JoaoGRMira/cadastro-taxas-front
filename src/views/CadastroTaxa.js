@@ -1079,3 +1079,6 @@ export default function CadastroTaxa() {
 		</Box>
 	</>
 }
+
+// VERSÃO 1.0.0
+// DATA DE LIBERAÇÃO: 26/12/2023
