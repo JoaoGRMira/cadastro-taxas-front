@@ -1,111 +1,113 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import logo from '../images/quero_ingresso_logo.png';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import logo from "../images/quero_ingresso_logo.png";
+import Connection from "../model/index";
+import { useToken } from "../model/tokenContext";
 import "../Styles/login.css";
+import { useLogin } from "../model/loginContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import mockUsers from '../MockUsers';
 
 export default function Login() {
-  const navigate = useNavigate();
-  const [loginData, setLoginData] = useState({ login: '', senha: '' });
-  const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const [loginData, setLoginData] = useState({ login: "", senha: "" });
+    const [error, setError] = useState("");
+    const { setToken } = useToken();
+    const { setLogin } = useLogin();
 
-  localStorage.clear();
+    localStorage.clear();
 
-  const checkVazio = () => {
-        let isVazio = false
-        if (document.getElementById('Login').value === '') {
-            isVazio = true
-            return isVazio
+    // Identifica se os campos estão vazios
+    const checkVazio = () => {
+        let isVazio = false;
+        if (document.getElementById("Login").value === "") {
+            isVazio = true;
+            return isVazio;
         }
-        if (document.getElementById('Password').value === '') {
-            isVazio = true
-            return isVazio
+        if (document.getElementById("Password").value === "") {
+            isVazio = true;
+            return isVazio;
         }
-    }
+    };
 
-  const handleLoginChange = (event) => {
-    setLoginData({ ...loginData, login: event.target.value });
-  };
+    // Atualiza o estado do login
+    const handleLoginChange = (event) => {
+        setLoginData({ ...loginData, login: event.target.value });
+    };
 
-  const handlePasswordChange = (event) => {
-    setLoginData({ ...loginData, senha: event.target.value });
-  };
+    // Atualiza o estado da senha
+    const handlePasswordChange = (event) => {
+        setLoginData({ ...loginData, senha: event.target.value });
+    };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+    // Envia a requisição de login
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-    if (checkVazio()) {
-      setError('Preencha suas credenciais.');
-      return;
-    }
+        // Verifica se os campos estão vazios
+        if (checkVazio()) {
+            setError("Preencha suas credenciais.");
+            return;
+        }
 
-    // Verifica se o usuário e a senha correspondem a algum usuário na lista mockUsers
-    const userFound = mockUsers.find(
-      (user) => user.login === loginData.login && user.senha === loginData.senha
-    );
+        // Requisição de login
+        try {
+            const conn = Connection();
+            const response = await conn.get(
+                `/login?login=${loginData.login}&senha=${loginData.senha}`
+            );
+            if (response.status === 200) {
+                setToken(response.data.token); // Armazena o token no contexto
+                localStorage.setItem("token", response.data.token);
+                setLogin(loginData.login); // Armazena o login no contexto
+                localStorage.setItem("login", loginData.login);
+                navigate("/cadastro-taxas");
+            }
+        } catch (error) {
+            console.error("Erro durante a requisição:", error);
+            setError("Credenciais inválidas");
+        }
+    };
 
-    if (userFound) {
-      // Simula uma resposta de sucesso
-      navigate('/cadastro-taxas');
-    } else {
-      setError('Credenciais inválidas');
-    }
-  };
+    return (
+        <div className="App">
+            <div className="auth-wrapper">
+                <div className="auth-inner">
+                    <form onSubmit={handleSubmit}> {/* Formulário de login */}
+                        <img src={logo} alt="home" />
 
-  return (
-    <div className="App">
-      <div className="auth-wrapper">
-        <div className="auth-inner">
-          <form onSubmit={handleSubmit}>
-            <img src={logo} alt='home' />
+                        <div className="mb-3">
+                            <input
+                                type="text"
+                                id="Login"
+                                className="form-control"
+                                placeholder="Login"
+                                value={loginData.login}
+                                onChange={handleLoginChange}
+                            /> {/* Campo de login */}
+                        </div>
 
-            <div className="mb-3">
-              <input
-                type="text"
-                id="Login"
-                className="form-control"
-                placeholder="Login"
-                value={loginData.login}
-                onChange={handleLoginChange}
-              />
+                        <div className="mb-3">
+                            <input
+                                type="password"
+                                id="Password"
+                                className="form-control"
+                                placeholder="Senha"
+                                value={loginData.senha}
+                                onChange={handlePasswordChange}
+                            /> {/* Campo de senha */}
+                        </div>
+
+                        {error && <p className="error-message">{error}</p>}
+
+                        <div className="d-grid">
+                            <button type="submit" className="btn btn-primary">
+                                Entrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div className="mb-3">
-              <input
-                type="password"
-                id="Password"
-                className="form-control"
-                placeholder="Senha"
-                value={loginData.senha}
-                onChange={handlePasswordChange}
-              />
-            </div>
-
-            {error && <p className="error-message">{error}</p>}
-
-            {/*<div className="mb-3">
-              <div className="custom-control custom-checkbox d-flex align-items-center">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="customCheck1"
-                />
-                <label className="custom-control-label" htmlFor="customCheck1">
-                  Lembrar-me
-                </label>
-              </div>
-            </div>*/}
-
-            <div className="d-grid">
-              <button type="submit" className="btn btn-primary">
-                Entrar
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
