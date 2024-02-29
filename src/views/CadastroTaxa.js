@@ -290,6 +290,14 @@ export default function CadastroTaxa() {
                         }))
                     );
                 }
+            })
+            // Identifica se houve erro na requisição e redireciona para a página de login caso o erro seja 401
+            .catch((error) => {
+                console.error(error);
+                if (error.response && error.response.status === 401) {
+                    // Redirect to login page
+                    window.location.href = "/";
+                }
             });
 
         return () => {
