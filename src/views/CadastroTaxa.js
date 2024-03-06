@@ -6,6 +6,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { styled } from "@mui/material/styles";
 import { Delete } from "@mui/icons-material";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -96,6 +97,7 @@ export default function CadastroTaxa() {
     const [parcelasList, setParcelasList] = useState([]); // Estado para armazenar a lista de parcelas
 
     const [taxaPadrao, setTaxaPadrao] = useState("0,00"); // Estado para controlar a taxa padrão
+    const [taxaParcelas, setTaxaParcelas] = useState("0%"); // Estado para controlar a taxa parcelas
 
     const [valorMinParcela, setValorMinParcela] = useState("0,00"); // Estado para controlar o valor mínimo da parcela
     const [numMaxParcelas, setNumMaxParcelas] = useState("0"); // Estado para controlar o número máximo de parcelas
@@ -602,7 +604,7 @@ export default function CadastroTaxa() {
             <Box sx={{ display: "flex" }}>
                 <Container maxWidth="xl" sx={{ mt: 4 }}>
                     <Grid container spacing={3}>
-                        {/* Área de Sobretaza */}
+                        {/* Área de Sobretaxa */}
                         <Grid item xs={12} md={12} lg={12}>
                             <Paper sx={{ p: 2 }}>
                                 <Typography
@@ -628,7 +630,7 @@ export default function CadastroTaxa() {
                                     }}
                                 />
                                 <Grid container spacing={3}>
-                                    <Grid item xs={12} md={6} lg={6}>
+                                    <Grid item xs={12} md={4} lg={4}>
                                         <Typography
                                             variant="body"
                                             component="div"
@@ -681,7 +683,7 @@ export default function CadastroTaxa() {
                                             />
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={12} md={6} lg={6}>
+                                    <Grid item xs={12} md={4} lg={4}>
                                         <Typography
                                             variant="body"
                                             component="div"
@@ -720,6 +722,35 @@ export default function CadastroTaxa() {
                                                 evento.value.eve_taxa_valor =
                                                     value;
                                             }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={4} lg={4}>
+                                        <Typography
+                                            variant="body"
+                                            component="div"
+                                            sx={{
+                                                padding: 2.5,
+                                                pb: 2,
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            <ConfirmationNumberIcon
+                                                sx={{
+                                                    color: "var(--blue)",
+                                                    marginRight: 1,
+                                                    marginBottom: -1,
+                                                }}
+                                            />
+                                            Taxa por Parcelas %:
+                                        </Typography>
+                                        {/* campo de taxa por parcela */}
+                                        <TextField
+                                            id="outlined-basic"
+                                            label="%"
+                                            variant="outlined"
+                                            style={{ width: "100%", height: 50 }}
+                                            InputLabelProps={{ shrink: true }}
+                                            value={taxaParcelas}
                                         />
                                     </Grid>
                                     <Grid
