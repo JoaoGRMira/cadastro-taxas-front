@@ -1,12 +1,28 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { DropdownList, NumberPercentMask } from "../components";
 import Connection from "../model";
-import { Box, Button, Checkbox, Container, Divider, FormControl, Grid, Paper, Table, TableBody, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Checkbox,
+    Container,
+    Divider,
+    FormControl,
+    Grid,
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField,
+    Typography,
+} from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import { styled } from "@mui/material/styles";
 import { Delete } from "@mui/icons-material";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -95,9 +111,13 @@ export default function CadastroTaxa() {
     const [classesList, setClassesList] = useState([]); // Estado para armazenar a lista de classes
     const [parcelaOpcao, setParcelaOpcao] = useState([]); // Estado para armazenar a opção de parcela selecionada
     const [parcelasList, setParcelasList] = useState([]); // Estado para armazenar a lista de parcelas
+    const [taxaParcelasList, setTaxaParcelasList] = useState([]); // Estado para armazenar a lista de taxas de parcelas
+
+    const [taxaParcelasValor, setTaxaParcelasValor] = useState("0.00"); // Estado para controlar o valor da taxa de parcelas
+    const [taxaParcelasPerc, setTaxaParcelasPerc] = useState("0.00"); // Estado para controlar a porcentagem da taxa de parcelas
 
     const [taxaPadrao, setTaxaPadrao] = useState("0,00"); // Estado para controlar a taxa padrão
-    const [taxaParcelas, setTaxaParcelas] = useState("0%"); // Estado para controlar a taxa parcelas
+    const [taxaParcelas, setTaxaParcelas] = useState("0.00"); // Estado para controlar a taxa parcelas
 
     const [valorMinParcela, setValorMinParcela] = useState("0,00"); // Estado para controlar o valor mínimo da parcela
     const [numMaxParcelas, setNumMaxParcelas] = useState("0"); // Estado para controlar o número máximo de parcelas
@@ -145,6 +165,7 @@ export default function CadastroTaxa() {
     /**
      * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e
      */
+    // Salva as taxas, parcelas e taxa padrão de um evento e suas classes de ingressos.
     function saveTaxa(e) {
         e.preventDefault();
 
@@ -173,6 +194,7 @@ export default function CadastroTaxa() {
     /**
      * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} e
      */
+    //Registra uma nova parcela.
     const criarRegraParcela = async (dadosRegraParcela) => {
         try {
             const response = await axios.post("/parcela", dadosRegraParcela, {
@@ -187,6 +209,37 @@ export default function CadastroTaxa() {
         }
     };
 
+    //Cria uma nova taxa de parcela.
+    const criarTaxaParcela = async (dadosTaxaParcela) => {
+        try {
+            console.log("Dados enviados para a criação da taxa de parcela:");
+    
+            const response = await axios.post("/parcela/taxa", 
+            {
+                valor: dadosTaxaParcela.txp_valor,
+                perc: dadosTaxaParcela.txp_perc
+
+            },
+            {
+                headers: {
+                    token: localStorage.getItem("token"),
+                },
+            });
+    
+            console.log("Resposta do servidor:", response.data);
+    
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao criar taxa de parcela:", error.response ? error.response.data : error.message);
+            throw error;
+        }
+    };
+    
+
+    //console.log(taxaParcelasPerc);
+    //console.log(taxaParcelasValor);
+
+    //Atualiza uma parcela.
     const atualizarRegraParcela = async (editarRegraParcela) => {
         try {
             const response = await axios.put("/parcela", editarRegraParcela, {
@@ -201,6 +254,7 @@ export default function CadastroTaxa() {
         }
     };
 
+    //Deleta uma parcela pelo id informado.
     const deletarRegraParcela = async (idRegraParcela) => {
         try {
             const response = await axios.delete(
@@ -218,6 +272,7 @@ export default function CadastroTaxa() {
         }
     };
 
+    //Gera uma senha de uso único.
     const genPass = async (radioOption) => {
         try {
             const response = await axios.get(`/gen_pass?tipo=${radioOption}`, {
@@ -236,6 +291,7 @@ export default function CadastroTaxa() {
     /**
      * @param {number} evento
      */
+    //Retorna as classes de ingressos do evento informado.
     function getClasses(evento) {
         setClasseLoading(true);
         axios
@@ -274,6 +330,7 @@ export default function CadastroTaxa() {
         );
     }
 
+    //Retorna a lista dos eventos ativos.
     useEffect(() => {
         let execute = true;
 
@@ -297,7 +354,7 @@ export default function CadastroTaxa() {
             .catch((error) => {
                 console.error(error);
                 if (error.response && error.response.status === 401) {
-                    // Redirect to login page
+                    // Redireciona para a página de login
                     window.location.href = "/";
                 }
             });
@@ -306,7 +363,33 @@ export default function CadastroTaxa() {
             execute = false;
         };
     }, [eventosList]);
+    //console.log(eventosList)
 
+    //Retorna as taxas de parcelas registradas.
+    useEffect(() => {
+        let execute = true;
+
+        if (!taxaParcelasList.length && execute) {
+            axios
+                .get("/parcela/taxa", {
+                    headers: {
+                        token: localStorage.getItem("token"),
+                    },
+                })
+                .then((resp) => {
+                    if (execute) {
+                        setTaxaParcelasList(resp.data);
+                    }
+                });
+        }
+
+        return () => {
+            execute = false;
+        };
+    }, []);
+    console.log(taxaParcelasList);
+
+    //Retorna as regras de parcelamento registradas.
     useEffect(() => {
         let execute = true;
         //Consulta os dados de parcela e armazena no useState
@@ -664,17 +747,9 @@ export default function CadastroTaxa() {
                                                     setEvento(evento);
 
                                                     if (evento !== null) {
-                                                        getClasses(
-                                                            evento?.value
-                                                                .eve_cod
-                                                        );
-                                                        setTaxaPadrao(
-                                                            NumberPercentMask(
-                                                                evento?.value
-                                                                    .eve_taxa_valor,
-                                                                0
-                                                            )
-                                                        );
+                                                        getClasses(evento?.value.eve_cod);
+                                                        setTaxaPadrao(NumberPercentMask(evento?.value.eve_taxa_valor, 0));
+                                                        setTaxaParcelas(taxaParcelasList.txp_valor, 0);
                                                     } else {
                                                         setClassesList([]);
                                                         setTaxaPadrao("0,00");
@@ -741,16 +816,26 @@ export default function CadastroTaxa() {
                                                     marginBottom: -1,
                                                 }}
                                             />
-                                            Taxa por Parcelas %:
+                                            Taxa por Parcelas:
                                         </Typography>
                                         {/* campo de taxa por parcela */}
                                         <TextField
                                             id="outlined-basic"
-                                            label="%"
+                                            label="R$"
                                             variant="outlined"
-                                            style={{ width: "100%", height: 50 }}
+                                            style={{
+                                                width: "100%",
+                                                height: 50,
+                                            }}
                                             InputLabelProps={{ shrink: true }}
                                             value={taxaParcelas}
+                                            onChange={(a) => {
+                                                let value = a.target.value;
+                                                setTaxaParcelas(value);
+                                                taxaParcelasList.txp_valor = value;
+                                                setTaxaParcelasValor(value);
+                                                setTaxaParcelasPerc(taxaParcelasList.txp_perc);
+                                            }}
                                         />
                                     </Grid>
                                     <Grid
@@ -758,12 +843,18 @@ export default function CadastroTaxa() {
                                         xs={12}
                                         sx={{ textAlign: "center" }}
                                     >
-                                        {/* botão salvar taxa */}
                                         <Button
                                             variant="contained"
                                             type="submit"
                                             disabled={loading || !evento}
-                                            onClick={saveTaxa}
+                                            onClick={(e) => {
+                                                const dadosTaxaParcela = {
+                                                    txp_valor: taxaParcelasValor,
+                                                    txp_perc: taxaParcelasPerc,
+                                                };
+                                                criarTaxaParcela(dadosTaxaParcela);
+                                                saveTaxa(e);
+                                            }}
                                             sx={{ mt: 2, width: 100 }}
                                         >
                                             {loading ? "Salvando..." : "Salvar"}
