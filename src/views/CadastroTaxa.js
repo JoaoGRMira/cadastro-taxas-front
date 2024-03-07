@@ -1,22 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { DropdownList, NumberPercentMask } from "../components";
 import Connection from "../model";
-import {
-    Box,
-    Button,
-    Checkbox,
-    Container,
-    Divider,
-    FormControl,
-    Grid,
-    Paper,
-    Table,
-    TableBody,
-    TableContainer,
-    TableHead,
-    TableRow,
-    TextField,
-    Typography,
+import { Box, Button, Checkbox, Container, Divider, FormControl, Grid, Paper, Table, TableBody, TableContainer, TableHead, TableRow, TextField, Typography,
 } from "@mui/material";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -114,7 +99,7 @@ export default function CadastroTaxa() {
     const [taxaParcelasList, setTaxaParcelasList] = useState([]); // Estado para armazenar a lista de taxas de parcelas
 
     const [taxaParcelasValor, setTaxaParcelasValor] = useState("0.00"); // Estado para controlar o valor da taxa de parcelas
-    const [taxaParcelasPerc, setTaxaParcelasPerc] = useState("0.00"); // Estado para controlar a porcentagem da taxa de parcelas
+    const [taxaParcelasPerc, setTaxaParcelasPerc] = useState("0"); // Estado para controlar a porcentagem da taxa de parcelas
 
     const [taxaPadrao, setTaxaPadrao] = useState("0,00"); // Estado para controlar a taxa padrão
     const [taxaParcelas, setTaxaParcelas] = useState("0.00"); // Estado para controlar a taxa parcelas
@@ -147,6 +132,15 @@ export default function CadastroTaxa() {
         setSelectedOption(event.target.value);
     };
 
+    // Função para controlar o tipo de parcela selecionado (R$ ou %)
+    const handleCheckboxTaxaParcelaChange = (event) => {
+        // Verifica se o checkbox está marcado
+        const isChecked = event.target.checked;
+
+        // Atualiza a variável taxaParcelasPerc com base no estado do checkbox
+        setTaxaParcelasPerc(isChecked ? 1 : 0);
+    };
+
     const limite_parcelas = useMemo(() => {
         if (classesList.length > 0) {
             let limits = classesList.map((classe) => {
@@ -170,25 +164,21 @@ export default function CadastroTaxa() {
         e.preventDefault();
 
         setLoading(true);
-        axios
-            .post(
-                `save/taxa`,
-                {
-                    evento: evento.value,
-                    classes: classesList.map((a) => a.value),
+        axios.post(`save/taxa`,
+            {
+                evento: evento.value,
+                classes: classesList.map((a) => a.value),
+            },
+            {
+                headers: {
+                    token: localStorage.getItem("token"),
                 },
-                {
-                    headers: {
-                        token: localStorage.getItem("token"),
-                    },
-                }
-            )
-            .then((resp) => {
-                if (resp.data) {
-                    alert("Sobretaxa Salva");
-                }
-            })
-            .finally(() => setLoading(false));
+            }
+        ).then((resp) => {
+            if (resp.data) {
+                alert("Sobretaxa Salva");
+            }
+        }).finally(() => setLoading(false));
     }
 
     /**
@@ -213,28 +203,26 @@ export default function CadastroTaxa() {
     const criarTaxaParcela = async (dadosTaxaParcela) => {
         try {
             console.log("Dados enviados para a criação da taxa de parcela:");
-    
-            const response = await axios.post("/parcela/taxa", 
-            {
-                valor: dadosTaxaParcela.txp_valor,
-                perc: dadosTaxaParcela.txp_perc
 
-            },
-            {
-                headers: {
-                    token: localStorage.getItem("token"),
+            const response = await axios.post("/parcela/taxa", {
+                    valor: dadosTaxaParcela.txp_valor,
+                    perc: dadosTaxaParcela.txp_perc,
                 },
-            });
-    
+                {
+                    headers: {
+                        token: localStorage.getItem("token"),
+                    },
+                }
+            );
+
             console.log("Resposta do servidor:", response.data);
-    
+
             return response.data;
         } catch (error) {
             console.error("Erro ao criar taxa de parcela:", error.response ? error.response.data : error.message);
             throw error;
         }
     };
-    
 
     //console.log(taxaParcelasPerc);
     //console.log(taxaParcelasValor);
@@ -257,9 +245,7 @@ export default function CadastroTaxa() {
     //Deleta uma parcela pelo id informado.
     const deletarRegraParcela = async (idRegraParcela) => {
         try {
-            const response = await axios.delete(
-                `/parcela?id=${idRegraParcela}`,
-                {
+            const response = await axios.delete(`/parcela?id=${idRegraParcela}`, {
                     headers: {
                         token: localStorage.getItem("token"),
                     },
@@ -294,25 +280,22 @@ export default function CadastroTaxa() {
     //Retorna as classes de ingressos do evento informado.
     function getClasses(evento) {
         setClasseLoading(true);
-        axios
-            .post(
-                "classes",
-                { evento },
-                {
-                    headers: {
-                        token: localStorage.getItem("token"),
-                    },
-                }
-            )
-            .then((resp) => {
+        axios.post("classes", { 
+                evento 
+            }, 
+            {
+                headers: {
+                    token: localStorage.getItem("token"),
+                },
+            }
+        ).then((resp) => {
                 setClassesList(
                     resp.data.map((a) => ({
                         value: a,
                         label: a.cla_nome,
                     }))
                 );
-            })
-            .finally(() => setClasseLoading(false));
+            }).finally(() => setClasseLoading(false));
     }
     //console.log(classesList)
 
@@ -334,30 +317,27 @@ export default function CadastroTaxa() {
     useEffect(() => {
         let execute = true;
 
-        axios
-            .get("eventos", {
-                headers: {
-                    token: localStorage.getItem("token"),
-                },
-            })
-            .then((resp) => {
-                if (!eventosList.length && execute) {
-                    setEventosList(
-                        resp.data.map((a) => ({
-                            value: a,
-                            label: a.eve_nome,
-                        }))
-                    );
-                }
-            })
+        axios.get("eventos", {
+            headers: {
+                token: localStorage.getItem("token"),
+            },
+        }).then((resp) => {
+            if (!eventosList.length && execute) {
+                setEventosList(
+                    resp.data.map((a) => ({
+                        value: a,
+                        label: a.eve_nome,
+                    }))
+                );
+            }
+        }).catch((error) => {
             // Identifica se houve erro na requisição e redireciona para a página de login caso o erro seja 401
-            .catch((error) => {
-                console.error(error);
-                if (error.response && error.response.status === 401) {
-                    // Redireciona para a página de login
-                    window.location.href = "/";
-                }
-            });
+            console.error(error);
+            if (error.response && error.response.status === 401) {
+                // Redireciona para a página de login
+                window.location.href = "/";
+            }
+        });
 
         return () => {
             execute = false;
@@ -370,17 +350,17 @@ export default function CadastroTaxa() {
         let execute = true;
 
         if (!taxaParcelasList.length && execute) {
-            axios
-                .get("/parcela/taxa", {
-                    headers: {
-                        token: localStorage.getItem("token"),
-                    },
-                })
-                .then((resp) => {
-                    if (execute) {
-                        setTaxaParcelasList(resp.data);
-                    }
-                });
+            axios.get("/parcela/taxa", {
+                headers: {
+                    token: localStorage.getItem("token"),
+                },
+            }).then((resp) => {
+                if (execute) {
+                    setTaxaParcelasList(resp.data);
+                    setTaxaParcelasPerc(resp.data.txp_perc);
+                    setTaxaParcelasValor(resp.data.txp_valor);
+                }
+            });
         }
 
         return () => {
@@ -393,22 +373,20 @@ export default function CadastroTaxa() {
     useEffect(() => {
         let execute = true;
         //Consulta os dados de parcela e armazena no useState
-        axios
-            .get("parcela", {
-                headers: {
-                    token: localStorage.getItem("token"),
-                },
-            })
-            .then((resp) => {
-                if (!parcelasList.length && execute) {
-                    setParcelasList(
-                        resp.data.map((a) => ({
-                            value: a,
-                            label: a.par_valor_min,
-                        }))
-                    );
-                }
-            });
+        axios.get("parcela", {
+            headers: {
+                token: localStorage.getItem("token"),
+            },
+        }).then((resp) => {
+            if (!parcelasList.length && execute) {
+                setParcelasList(
+                    resp.data.map((a) => ({
+                        value: a,
+                        label: a.par_valor_min,
+                    }))
+                );
+            }
+        });
 
         return () => {
             execute = false;
@@ -542,10 +520,7 @@ export default function CadastroTaxa() {
         return (
             <TableRow className={show ? "" : "collapsed"}>
                 {/* PDV */}
-                <TableCell
-                    align="center"
-                    sx={{ borderLeft: "1px solid var(--grey-shadow)" }}
-                >
+                <TableCell align="center" sx={{ borderLeft: "1px solid var(--grey-shadow)" }}>
                     {pdv.pdv_nome}
                 </TableCell>
 
@@ -747,9 +722,21 @@ export default function CadastroTaxa() {
                                                     setEvento(evento);
 
                                                     if (evento !== null) {
-                                                        getClasses(evento?.value.eve_cod);
-                                                        setTaxaPadrao(NumberPercentMask(evento?.value.eve_taxa_valor, 0));
-                                                        setTaxaParcelas(taxaParcelasList.txp_valor, 0);
+                                                        getClasses(
+                                                            evento?.value
+                                                                .eve_cod
+                                                        );
+                                                        setTaxaPadrao(
+                                                            NumberPercentMask(
+                                                                evento?.value
+                                                                    .eve_taxa_valor,
+                                                                0
+                                                            )
+                                                        );
+                                                        setTaxaParcelas(
+                                                            taxaParcelasList.txp_valor,
+                                                            0
+                                                        );
                                                     } else {
                                                         setClassesList([]);
                                                         setTaxaPadrao("0,00");
@@ -758,7 +745,7 @@ export default function CadastroTaxa() {
                                             />
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={12} md={4} lg={4}>
+                                    <Grid item xs={12} md={3} lg={3}>
                                         <Typography
                                             variant="body"
                                             component="div"
@@ -799,7 +786,7 @@ export default function CadastroTaxa() {
                                             }}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} md={4} lg={4}>
+                                    <Grid item xs={10} md={3} lg={3}>
                                         <Typography
                                             variant="body"
                                             component="div"
@@ -821,7 +808,7 @@ export default function CadastroTaxa() {
                                         {/* campo de taxa por parcela */}
                                         <TextField
                                             id="outlined-basic"
-                                            label="R$"
+                                            label={taxaParcelasPerc === 1 ? "%" : "R$"}
                                             variant="outlined"
                                             style={{
                                                 width: "100%",
@@ -832,24 +819,44 @@ export default function CadastroTaxa() {
                                             onChange={(a) => {
                                                 let value = a.target.value;
                                                 setTaxaParcelas(value);
-                                                taxaParcelasList.txp_valor = value;
+                                                taxaParcelasList.txp_valor =
+                                                    value;
                                                 setTaxaParcelasValor(value);
-                                                setTaxaParcelasPerc(taxaParcelasList.txp_perc);
                                             }}
                                         />
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sx={{ textAlign: "center" }}
+                                    <Grid item xs={2} md={2} lg={2}
+                                        sx={{
+                                            alignContent: "center",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center",
+                                            textAlign: "center",
+                                        }}
                                     >
+                                        <Typography
+                                            variant="body"
+                                            component="div"
+                                            sx={{
+                                                padding: 2.5,
+                                                pb: 2,
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Taxa em percentual
+                                        </Typography>
+                                        <Checkbox 
+                                            onChange={handleCheckboxTaxaParcelaChange} 
+                                            checked={taxaParcelasPerc === 1}/>
+                                    </Grid>
+                                    <Grid item xs={12} sx={{ textAlign: "center" }}>
                                         <Button
                                             variant="contained"
                                             type="submit"
                                             disabled={loading || !evento}
                                             onClick={(e) => {
                                                 const dadosTaxaParcela = {
-                                                    txp_valor: taxaParcelasValor,
+                                                    txp_valor:taxaParcelasValor,
                                                     txp_perc: taxaParcelasPerc,
                                                 };
                                                 criarTaxaParcela(dadosTaxaParcela);
@@ -1137,50 +1144,17 @@ export default function CadastroTaxa() {
                                                         min="0"
                                                         value={parcelaMax}
                                                         onChange={(a) => {
-                                                            let value =
-                                                                parseInt(
-                                                                    !!a.target
-                                                                        .value
-                                                                        ? a
-                                                                              .target
-                                                                              .value
-                                                                        : 1
-                                                                );
+                                                            let value = parseInt(!!a.target.value ? a.target.value : 1);
 
-                                                            if (
-                                                                value >= 0 &&
-                                                                value <=
-                                                                    limite_parcelas
-                                                            ) {
-                                                                setParcelaMax(
-                                                                    value
-                                                                );
-                                                                updateAllTax(
-                                                                    "parcela",
-                                                                    "par_max",
-                                                                    value
-                                                                );
-                                                            } else if (
-                                                                value >
-                                                                limite_parcelas
-                                                            ) {
-                                                                setParcelaMax(
-                                                                    limite_parcelas
-                                                                );
-                                                                updateAllTax(
-                                                                    "parcela",
-                                                                    "par_max",
-                                                                    limite_parcelas
-                                                                );
+                                                            if (value >= 0 && value <= limite_parcelas) {
+                                                                setParcelaMax(value);
+                                                                updateAllTax("parcela", "par_max", value);
+                                                            } else if (value > limite_parcelas) {
+                                                                setParcelaMax(limite_parcelas);
+                                                                updateAllTax("parcela", "par_max", limite_parcelas);
                                                             } else {
-                                                                setParcelaMax(
-                                                                    0
-                                                                );
-                                                                updateAllTax(
-                                                                    "parcela",
-                                                                    "par_max",
-                                                                    0
-                                                                );
+                                                                setParcelaMax(0);
+                                                                updateAllTax("parcela", "par_max", 0);
                                                             }
                                                         }}
                                                     />
