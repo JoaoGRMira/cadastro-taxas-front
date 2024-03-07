@@ -202,7 +202,7 @@ export default function CadastroTaxa() {
     //Cria uma nova taxa de parcela.
     const criarTaxaParcela = async (dadosTaxaParcela) => {
         try {
-            console.log("Dados enviados para a criação da taxa de parcela:");
+            //console.log("Dados enviados para a criação da taxa de parcela:");
 
             const response = await axios.post("/parcela/taxa", {
                     valor: dadosTaxaParcela.txp_valor,
@@ -215,7 +215,7 @@ export default function CadastroTaxa() {
                 }
             );
 
-            console.log("Resposta do servidor:", response.data);
+            //console.log("Resposta do servidor:", response.data);
 
             return response.data;
         } catch (error) {
@@ -366,8 +366,9 @@ export default function CadastroTaxa() {
         return () => {
             execute = false;
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    console.log(taxaParcelasList);
+    //console.log(taxaParcelasList);
 
     //Retorna as regras de parcelamento registradas.
     useEffect(() => {
@@ -672,8 +673,7 @@ export default function CadastroTaxa() {
                                     sx={{
                                         paddingTop: 2,
                                         px: 2,
-                                        fontFamily:
-                                            '"Century Gothic", Futura, sans-serif',
+                                        fontFamily: '"Century Gothic", Futura, sans-serif',
                                         fontWeight: "bold",
                                     }}
                                     gutterBottom
@@ -879,8 +879,7 @@ export default function CadastroTaxa() {
                                         component="div"
                                         sx={{
                                             padding: 2,
-                                            fontFamily:
-                                                '"Century Gothic", Futura, sans-serif',
+                                            fontFamily: '"Century Gothic", Futura, sans-serif',
                                             fontWeight: "bold",
                                             color: "var(--blue)",
                                         }}
@@ -950,25 +949,12 @@ export default function CadastroTaxa() {
                                                     <TextField
                                                         label="Valor"
                                                         variant="outlined"
-                                                        value={
-                                                            dinheiro_perc
-                                                                ? `${dinheiro} %`
-                                                                : `R$ ${dinheiro}`
-                                                        }
+                                                        value={ dinheiro_perc ? `${dinheiro} %` : `R$ ${dinheiro}` }
                                                         onChange={(a) => {
-                                                            let value =
-                                                                NumberPercentMask(
-                                                                    a.target
-                                                                        .value,
-                                                                    dinheiro_perc
-                                                                );
+                                                            let value = NumberPercentMask(a.target.value, dinheiro_perc);
 
                                                             setDinheiro(value);
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_dinheiro",
-                                                                value
-                                                            );
+                                                            updateAllTax("taxa", "tax_dinheiro", value);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -977,19 +963,10 @@ export default function CadastroTaxa() {
                                                     <Checkbox
                                                         checked={dinheiro_perc}
                                                         onChange={() => {
-                                                            let perc =
-                                                                !dinheiro_perc
-                                                                    ? 1
-                                                                    : 0;
+                                                            let perc = !dinheiro_perc ? 1 : 0;
 
-                                                            setDinheiro_perc(
-                                                                perc
-                                                            );
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_dinheiro_perc",
-                                                                perc
-                                                            );
+                                                            setDinheiro_perc(perc);
+                                                            updateAllTax("taxa", "tax_dinheiro_perc", perc);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -998,25 +975,12 @@ export default function CadastroTaxa() {
                                                     <TextField
                                                         label="Valor"
                                                         variant="outlined"
-                                                        value={
-                                                            credito_perc
-                                                                ? `${credito} %`
-                                                                : `R$ ${credito}`
-                                                        }
+                                                        value={ credito_perc ? `${credito} %` : `R$ ${credito}` }
                                                         onChange={(a) => {
-                                                            let value =
-                                                                NumberPercentMask(
-                                                                    a.target
-                                                                        .value,
-                                                                    credito_perc
-                                                                );
+                                                            let value = NumberPercentMask(a.target.value, credito_perc);
 
                                                             setCredito(value);
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_credito",
-                                                                value
-                                                            );
+                                                            updateAllTax("taxa", "tax_credito", value);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1025,19 +989,10 @@ export default function CadastroTaxa() {
                                                     <Checkbox
                                                         checked={credito_perc}
                                                         onChange={() => {
-                                                            let perc =
-                                                                !credito_perc
-                                                                    ? 1
-                                                                    : 0;
+                                                            let perc = !credito_perc ? 1 : 0;
 
-                                                            setCredito_perc(
-                                                                perc
-                                                            );
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_credito_perc",
-                                                                perc
-                                                            );
+                                                            setCredito_perc(perc);
+                                                            updateAllTax("taxa", "tax_credito_perc", perc);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1046,25 +1001,12 @@ export default function CadastroTaxa() {
                                                     <TextField
                                                         label="Valor"
                                                         variant="outlined"
-                                                        value={
-                                                            debito_perc
-                                                                ? `${debito} %`
-                                                                : `R$ ${debito}`
-                                                        }
+                                                        value={ debito_perc ? `${debito} %` : `R$ ${debito}` }
                                                         onChange={(a) => {
-                                                            let value =
-                                                                NumberPercentMask(
-                                                                    a.target
-                                                                        .value,
-                                                                    debito_perc
-                                                                );
+                                                            let value = NumberPercentMask(a.target.value, debito_perc);
 
                                                             setDebito(value);
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_debito",
-                                                                value
-                                                            );
+                                                            updateAllTax("taxa", "tax_debito", value);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1073,19 +1015,10 @@ export default function CadastroTaxa() {
                                                     <Checkbox
                                                         checked={debito_perc}
                                                         onChange={() => {
-                                                            let perc =
-                                                                !debito_perc
-                                                                    ? 1
-                                                                    : 0;
+                                                            let perc = !debito_perc ? 1 : 0;
 
-                                                            setDebito_perc(
-                                                                perc
-                                                            );
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_debito_perc",
-                                                                perc
-                                                            );
+                                                            setDebito_perc(perc);
+                                                            updateAllTax("taxa", "tax_debito_perc", perc);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1094,25 +1027,12 @@ export default function CadastroTaxa() {
                                                     <TextField
                                                         label="Valor"
                                                         variant="outlined"
-                                                        value={
-                                                            pix_perc
-                                                                ? `${pix} %`
-                                                                : `R$ ${pix}`
-                                                        }
+                                                        value={ pix_perc ? `${pix} %` : `R$ ${pix}` }
                                                         onChange={(a) => {
-                                                            let value =
-                                                                NumberPercentMask(
-                                                                    a.target
-                                                                        .value,
-                                                                    pix_perc
-                                                                );
+                                                            let value = NumberPercentMask(a.target.value, pix_perc);
 
                                                             setPix(value);
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_pix",
-                                                                value
-                                                            );
+                                                            updateAllTax("taxa", "tax_pix", value);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1121,16 +1041,10 @@ export default function CadastroTaxa() {
                                                     <Checkbox
                                                         checked={pix_perc}
                                                         onChange={() => {
-                                                            let perc = !pix_perc
-                                                                ? 1
-                                                                : 0;
+                                                            let perc = !pix_perc ? 1 : 0;
 
                                                             setPix_perc(perc);
-                                                            updateAllTax(
-                                                                "taxa",
-                                                                "tax_pix_perc",
-                                                                perc
-                                                            );
+                                                            updateAllTax("taxa", "tax_pix_perc", perc);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1164,25 +1078,12 @@ export default function CadastroTaxa() {
                                                     <TextField
                                                         label="Valor"
                                                         variant="outlined"
-                                                        value={
-                                                            parcela_perc
-                                                                ? `${parcela} %`
-                                                                : `R$ ${parcela}`
-                                                        }
+                                                        value={ parcela_perc ? `${parcela} %` : `R$ ${parcela}` }
                                                         onChange={(a) => {
-                                                            let value =
-                                                                NumberPercentMask(
-                                                                    a.target
-                                                                        .value,
-                                                                    parcela_perc
-                                                                );
+                                                            let value = NumberPercentMask(a.target.value, parcela_perc);
 
                                                             setParcela(value);
-                                                            updateAllTax(
-                                                                "parcela",
-                                                                "par_acrescimo",
-                                                                value
-                                                            );
+                                                            updateAllTax("parcela", "par_acrescimo", value);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1191,19 +1092,10 @@ export default function CadastroTaxa() {
                                                     <Checkbox
                                                         checked={parcela_perc}
                                                         onChange={() => {
-                                                            let perc =
-                                                                !parcela_perc
-                                                                    ? 1
-                                                                    : 0;
+                                                            let perc = !parcela_perc ? 1 : 0;
 
-                                                            setParcela_perc(
-                                                                perc
-                                                            );
-                                                            updateAllTax(
-                                                                "parcela",
-                                                                "par_acrescimo_perc",
-                                                                perc
-                                                            );
+                                                            setParcela_perc(perc);
+                                                            updateAllTax("parcela", "par_acrescimo_perc", perc);
                                                         }}
                                                     />
                                                 </TableCell>
@@ -1245,8 +1137,7 @@ export default function CadastroTaxa() {
                                     sx={{
                                         paddingTop: 2,
                                         px: 2,
-                                        fontFamily:
-                                            '"Century Gothic", Futura, sans-serif',
+                                        fontFamily: '"Century Gothic", Futura, sans-serif',
                                         fontWeight: "bold",
                                     }}
                                     gutterBottom
@@ -1290,18 +1181,12 @@ export default function CadastroTaxa() {
                                             }}
                                             InputLabelProps={{ shrink: true }}
                                             //(parcelaOpcao.value && parcelaOpcao.value.par_valor_min) ||
-                                            value={
-                                                (parcelaOpcao.value &&
-                                                    parcelaOpcao.value
-                                                        .par_valor_min) ||
-                                                valorMinParcela
-                                            }
+                                            value={(parcelaOpcao.value && parcelaOpcao.value.par_valor_min) || valorMinParcela}
                                             onChange={(a) => {
                                                 let value = a.target.value;
                                                 setValorMinParcela(value);
                                                 if (parcelaOpcao.value) {
-                                                    parcelaOpcao.value.par_valor_min =
-                                                        value;
+                                                    parcelaOpcao.value.par_valor_min = value;
                                                 }
                                             }}
                                         />
@@ -1335,27 +1220,17 @@ export default function CadastroTaxa() {
                                             }}
                                             InputLabelProps={{ shrink: true }}
                                             //(parcelaOpcao.value && parcelaOpcao.value.par_count) ||
-                                            value={
-                                                (parcelaOpcao.value &&
-                                                    parcelaOpcao.value
-                                                        .par_count) ||
-                                                numMaxParcelas
-                                            }
+                                            value={(parcelaOpcao.value && parcelaOpcao.value.par_count) || numMaxParcelas}
                                             onChange={(a) => {
                                                 let value = a.target.value;
                                                 setNumMaxParcelas(value);
                                                 if (parcelaOpcao.value) {
-                                                    parcelaOpcao.value.par_count =
-                                                        value;
+                                                    parcelaOpcao.value.par_count = value;
                                                 }
                                             }}
                                         />
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sx={{ textAlign: "center" }}
-                                    >
+                                    <Grid item xs={12} sx={{ textAlign: "center" }}>
                                         {/* botão de salvar parcela */}
                                         <Button
                                             variant="contained"
@@ -1363,13 +1238,10 @@ export default function CadastroTaxa() {
                                             //disabled={loading || !parcelaOpcao}
                                             onClick={() => {
                                                 const dadosRegraParcela = {
-                                                    par_valor_min:
-                                                        valorMinParcela,
+                                                    par_valor_min: valorMinParcela,
                                                     par_count: numMaxParcelas,
                                                 };
-                                                criarRegraParcela(
-                                                    dadosRegraParcela
-                                                )
+                                                criarRegraParcela(dadosRegraParcela)
                                                     .then((resposta) => {
                                                         // console.log(
                                                         //     "Regra de parcela criada:",
@@ -1378,10 +1250,7 @@ export default function CadastroTaxa() {
                                                         window.location.reload();
                                                     })
                                                     .catch((erro) => {
-                                                        console.error(
-                                                            "Erro ao criar regra de parcela:",
-                                                            erro
-                                                        );
+                                                        console.error("Erro ao criar regra de parcela:", erro);
                                                     });
                                                 //console.log(dadosRegraParcela);
                                             }}
@@ -1421,25 +1290,15 @@ export default function CadastroTaxa() {
                                             <DropdownList
                                                 data={parcelasList}
                                                 value={parcelaOpcao}
-                                                placeholder={
-                                                    "Selecionar Parcela..."
-                                                }
+                                                placeholder={ "Selecionar Parcela..." }
                                                 disabled={!parcelasList.length}
-                                                onChangeHandler={(
-                                                    parcelaOpcao
-                                                ) => {
-                                                    setParcelaOpcao(
-                                                        parcelaOpcao
-                                                    );
+                                                onChangeHandler={( parcelaOpcao ) => {
+                                                    setParcelaOpcao(parcelaOpcao);
                                                 }}
                                             />
                                         </FormControl>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sx={{ textAlign: "center" }}
-                                    >
+                                    <Grid item xs={12} sx={{ textAlign: "center" }}>
                                         {/* botão de editar parcela */}
                                         <Button
                                             variant="contained"
@@ -1447,15 +1306,11 @@ export default function CadastroTaxa() {
                                             //disabled={loading || !parcelaOpcao}
                                             onClick={() => {
                                                 const editarRegraParcela = {
-                                                    par_id: parcelaOpcao.value
-                                                        .par_id,
-                                                    par_valor_min:
-                                                        valorMinParcela,
+                                                    par_id: parcelaOpcao.value.par_id,
+                                                    par_valor_min: valorMinParcela,
                                                     par_count: numMaxParcelas,
                                                 };
-                                                atualizarRegraParcela(
-                                                    editarRegraParcela
-                                                )
+                                                atualizarRegraParcela(editarRegraParcela)
                                                     .then((resposta) => {
                                                         // console.log(
                                                         //     "Regra de parcela atualizada:",
@@ -1464,10 +1319,7 @@ export default function CadastroTaxa() {
                                                         window.location.reload();
                                                     })
                                                     .catch((erro) => {
-                                                        console.error(
-                                                            "Erro ao atualizar regra de parcela:",
-                                                            erro
-                                                        );
+                                                        console.error("Erro ao atualizar regra de parcela:", erro);
                                                     });
                                                 //console.log(editarRegraParcela);
                                             }}
@@ -1489,8 +1341,7 @@ export default function CadastroTaxa() {
                                         component="div"
                                         sx={{
                                             padding: 2,
-                                            fontFamily:
-                                                '"Century Gothic", Futura, sans-serif',
+                                            fontFamily: '"Century Gothic", Futura, sans-serif',
                                             fontWeight: "bold",
                                             color: "var(--blue)",
                                         }}
@@ -1533,11 +1384,7 @@ export default function CadastroTaxa() {
                                                                 label="ID"
                                                                 variant="outlined"
                                                                 disabled
-                                                                value={
-                                                                    parcela
-                                                                        .value
-                                                                        .par_id
-                                                                }
+                                                                value={ parcela.value.par_id }
                                                             />
                                                         </TableCell>
                                                         {/* Valor Mínimo */}
@@ -1545,20 +1392,10 @@ export default function CadastroTaxa() {
                                                             <TextField
                                                                 label="Valor"
                                                                 variant="outlined"
-                                                                value={
-                                                                    parcela
-                                                                        .value
-                                                                        .par_valor_min
-                                                                }
-                                                                onChange={(
-                                                                    a
-                                                                ) => {
-                                                                    let value =
-                                                                        a.target
-                                                                            .value;
-                                                                    setValorMinParcela(
-                                                                        value
-                                                                    );
+                                                                value={ parcela.value.par_valor_min }
+                                                                onChange={(a) => {
+                                                                    let value = a.target.value;
+                                                                    setValorMinParcela(value);
                                                                 }}
                                                             />
                                                         </TableCell>
@@ -1567,20 +1404,9 @@ export default function CadastroTaxa() {
                                                             <TextField
                                                                 label="Parcelas"
                                                                 variant="outlined"
-                                                                value={
-                                                                    parcela
-                                                                        .value
-                                                                        .par_count
-                                                                }
-                                                                onChange={(
-                                                                    a
-                                                                ) => {
-                                                                    let value =
-                                                                        a.target
-                                                                            .value;
-                                                                    setNumMaxParcelas(
-                                                                        value
-                                                                    );
+                                                                value={ parcela.value.par_count }
+                                                                onChange={(a) => { let value = a.target.value;
+                                                                    setNumMaxParcelas(value);
                                                                 }}
                                                             />
                                                         </TableCell>
@@ -1590,13 +1416,8 @@ export default function CadastroTaxa() {
                                                                     cursor: "pointer",
                                                                 }}
                                                                 onClick={() => {
-                                                                    const idRegraParcela =
-                                                                        parcela
-                                                                            .value
-                                                                            .par_id;
-                                                                    deletarRegraParcela(
-                                                                        idRegraParcela
-                                                                    )
+                                                                    const idRegraParcela = parcela.value.par_id;
+                                                                    deletarRegraParcela(idRegraParcela)
                                                                         .then(
                                                                             (
                                                                                 resposta
@@ -1607,15 +1428,9 @@ export default function CadastroTaxa() {
                                                                                 // );
                                                                                 window.location.reload();
                                                                             }
-                                                                        )
-                                                                        .catch(
-                                                                            (
-                                                                                erro
-                                                                            ) => {
-                                                                                console.error(
-                                                                                    "Erro ao deletar regra de parcela:",
-                                                                                    erro
-                                                                                );
+                                                                        ).catch(
+                                                                            (erro) => {
+                                                                                console.error("Erro ao deletar regra de parcela:", erro);
                                                                             }
                                                                         );
                                                                     // console.log(
@@ -1642,8 +1457,7 @@ export default function CadastroTaxa() {
                                     sx={{
                                         paddingTop: 2,
                                         px: 2,
-                                        fontFamily:
-                                            '"Century Gothic", Futura, sans-serif',
+                                        fontFamily:'"Century Gothic", Futura, sans-serif',
                                         fontWeight: "bold",
                                     }}
                                     gutterBottom
@@ -1723,13 +1537,7 @@ export default function CadastroTaxa() {
                                             //value={}
                                         />
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        md={12}
-                                        lg={12}
-                                        sx={{ textAlign: "center" }}
-                                    >
+                                    <Grid item xs={12} md={12} lg={12} sx={{ textAlign: "center" }}>
                                         {/* botão de gerar senha */}
                                         {/*disabled={loading || !parcelaOpcao}*/}
                                         {/*{loading ? 'Gerando...' : 'Gerar'}*/}
@@ -1737,20 +1545,15 @@ export default function CadastroTaxa() {
                                             variant="contained"
                                             type="submit"
                                             onClick={() => {
-                                                const radioOption =
-                                                    selectedOption;
+                                                const radioOption = selectedOption;
                                                 genPass(radioOption)
                                                     .then((resposta) => {
                                                         // console.log(
                                                         //     "Senha gerada:",
                                                         //     resposta
                                                         // );
-                                                    })
-                                                    .catch((erro) => {
-                                                        console.error(
-                                                            "Erro ao gerar senha:",
-                                                            erro
-                                                        );
+                                                    }).catch((erro) => {
+                                                        console.error("Erro ao gerar senha:", erro);
                                                     });
                                             }}
                                             sx={{ m: 2, width: 100 }}
