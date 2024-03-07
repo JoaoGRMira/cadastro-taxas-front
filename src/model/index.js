@@ -10,3 +10,6 @@ export default function Connection() {
 
     return conn;
 }
+
+// VERSÃO 1.0.2
+// DATA DE LIBERAÇÃO: 07/03/2024

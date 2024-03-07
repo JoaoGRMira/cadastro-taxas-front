@@ -1568,6 +1568,3 @@ export default function CadastroTaxa() {
         </>
     );
 }
-
-// VERSÃO 1.0.1
-// DATA DE LIBERAÇÃO: 28/02/2024
