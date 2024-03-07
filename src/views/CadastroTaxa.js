@@ -1419,9 +1419,7 @@ export default function CadastroTaxa() {
                                                                     const idRegraParcela = parcela.value.par_id;
                                                                     deletarRegraParcela(idRegraParcela)
                                                                         .then(
-                                                                            (
-                                                                                resposta
-                                                                            ) => {
+                                                                            (resposta) => {
                                                                                 // console.log(
                                                                                 //     "Regra de parcela deletada:",
                                                                                 //     resposta
