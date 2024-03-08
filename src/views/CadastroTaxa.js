@@ -564,46 +564,6 @@ export default function CadastroTaxa() {
                     setPercent={setPix_perc}
                     onCheck={(perc) => (pdv.taxa.tax_pix_perc = perc)}
                 />
-
-                {/* Parcelas Max */}
-                <TableCell align="center">
-                    <TextField
-                        label="Parcelas"
-                        type="number"
-                        variant="outlined"
-                        max={limite_parcelas}
-                        value={parcelaMax}
-                        onChange={(a) => {
-                            let value = parseInt(
-                                !!a.target.value ? a.target.value : 1
-                            );
-                            if (value >= 0 && value <= limite_parcelas) {
-                                setParcelaMax(value);
-                                updateAllTax("parcela", "par_max", value);
-                            } else if (value > limite_parcelas) {
-                                setParcelaMax(limite_parcelas);
-                                updateAllTax(
-                                    "parcela",
-                                    "par_max",
-                                    limite_parcelas
-                                );
-                            } else {
-                                setParcelaMax(0);
-                                updateAllTax("parcela", "par_max", 0);
-                            }
-                        }}
-                    />
-                </TableCell>
-
-                {/* Taxa Parcela */}
-                <TaxaInput
-                    taxa={parcela}
-                    setTaxa={setParcela}
-                    onChange={(value) => (pdv.parcela.par_acrescimo = value)}
-                    percent={parcela_perc}
-                    setPercent={setParcela_perc}
-                    onCheck={(perc) => (pdv.parcela.par_acrescimo_perc = perc)}
-                />
             </TableRow>
         );
     }
@@ -930,15 +890,6 @@ export default function CadastroTaxa() {
                                                 <StyledTableHeaderCell align="center">
                                                     %
                                                 </StyledTableHeaderCell>
-                                                <StyledTableHeaderCell align="center">
-                                                    Parcelas Max
-                                                </StyledTableHeaderCell>
-                                                <StyledTableHeaderCell align="center">
-                                                    Taxa Parcelas
-                                                </StyledTableHeaderCell>
-                                                <StyledTableHeaderCell align="center">
-                                                    %
-                                                </StyledTableHeaderCell>
                                             </StyledTableRow>
                                         </TableHead>
                                         <TableBody>
@@ -1045,57 +996,6 @@ export default function CadastroTaxa() {
 
                                                             setPix_perc(perc);
                                                             updateAllTax("taxa", "tax_pix_perc", perc);
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                {/* Parcelas Max */}
-                                                <TableCell align="center">
-                                                    <TextField
-                                                        label="Parcelas"
-                                                        type="number"
-                                                        variant="outlined"
-                                                        max={limite_parcelas}
-                                                        min="0"
-                                                        value={parcelaMax}
-                                                        onChange={(a) => {
-                                                            let value = parseInt(!!a.target.value ? a.target.value : 1);
-
-                                                            if (value >= 0 && value <= limite_parcelas) {
-                                                                setParcelaMax(value);
-                                                                updateAllTax("parcela", "par_max", value);
-                                                            } else if (value > limite_parcelas) {
-                                                                setParcelaMax(limite_parcelas);
-                                                                updateAllTax("parcela", "par_max", limite_parcelas);
-                                                            } else {
-                                                                setParcelaMax(0);
-                                                                updateAllTax("parcela", "par_max", 0);
-                                                            }
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                {/* Taxa Parcela */}
-                                                <TableCell align="center">
-                                                    <TextField
-                                                        label="Valor"
-                                                        variant="outlined"
-                                                        value={ parcela_perc ? `${parcela} %` : `R$ ${parcela}` }
-                                                        onChange={(a) => {
-                                                            let value = NumberPercentMask(a.target.value, parcela_perc);
-
-                                                            setParcela(value);
-                                                            updateAllTax("parcela", "par_acrescimo", value);
-                                                        }}
-                                                    />
-                                                </TableCell>
-                                                {/* % */}
-                                                <TableCell align="center">
-                                                    <Checkbox
-                                                        checked={parcela_perc}
-                                                        onChange={() => {
-                                                            let perc = !parcela_perc ? 1 : 0;
-
-                                                            setParcela_perc(perc);
-                                                            updateAllTax("parcela", "par_acrescimo_perc", perc);
                                                         }}
                                                     />
                                                 </TableCell>
