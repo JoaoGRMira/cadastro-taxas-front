@@ -116,27 +116,27 @@ export default function CadastroTaxa() {
     const [taxaParcelasValor, setTaxaParcelasValor] = useState("0.00"); // Estado para controlar o valor da taxa de parcelas
     const [taxaParcelasPerc, setTaxaParcelasPerc] = useState("0"); // Estado para controlar a porcentagem da taxa de parcelas
 
-    const [taxaPadrao, setTaxaPadrao] = useState("0,00"); // Estado para controlar a taxa padrão
+    const [taxaPadrao, setTaxaPadrao] = useState("0.00"); // Estado para controlar a taxa padrão
     const [taxaParcelas, setTaxaParcelas] = useState("0.00"); // Estado para controlar a taxa parcelas
 
-    const [valorMinParcela, setValorMinParcela] = useState("0,00"); // Estado para controlar o valor mínimo da parcela
+    const [valorMinParcela, setValorMinParcela] = useState("0.00"); // Estado para controlar o valor mínimo da parcela
     const [numMaxParcelas, setNumMaxParcelas] = useState("0"); // Estado para controlar o número máximo de parcelas
 
-    const [dinheiro, setDinheiro] = useState("0,00"); // Estado para controlar o valor da taxa de dinheiro
+    const [dinheiro, setDinheiro] = useState("0.00"); // Estado para controlar o valor da taxa de dinheiro
     const [dinheiro_perc, setDinheiro_perc] = useState(0); // Estado para controlar a porcentagem da taxa de dinheiro
 
-    const [credito, setCredito] = useState("0,00"); // Estado para controlar o valor da taxa de crédito
+    const [credito, setCredito] = useState("0.00"); // Estado para controlar o valor da taxa de crédito
     const [credito_perc, setCredito_perc] = useState(0); // Estado para controlar a porcentagem da taxa de crédito
 
-    const [debito, setDebito] = useState("0,00"); // Estado para controlar o valor da taxa de débito
+    const [debito, setDebito] = useState("0.00"); // Estado para controlar o valor da taxa de débito
     const [debito_perc, setDebito_perc] = useState(0); // Estado para controlar a porcentagem da taxa de débito
 
-    const [pix, setPix] = useState("0,00"); // Estado para controlar o valor da taxa de PIX
+    const [pix, setPix] = useState("0.00"); // Estado para controlar o valor da taxa de PIX
     const [pix_perc, setPix_perc] = useState(0); // Estado para controlar a porcentagem da taxa de PIX
 
     const [parcelaMax, setParcelaMax] = useState(1); // Estado para controlar o número máximo de parcelas
 
-    const [parcela, setParcela] = useState("0,00"); // Estado para controlar o valor da taxa de parcela
+    const [parcela, setParcela] = useState("0.00"); // Estado para controlar o valor da taxa de parcela
     const [parcela_perc, setParcela_perc] = useState(0); // Estado para controlar a porcentagem da taxa de parcela
 
     const [selectedOption, setSelectedOption] = useState("cancelar"); // Estado para controlar a opção de senha selecionada
@@ -155,6 +155,14 @@ export default function CadastroTaxa() {
         // Atualiza a variável taxaParcelasPerc com base no estado do checkbox
         setTaxaParcelasPerc(isChecked ? 1 : 0);
     };
+
+    // Função para substituir vírgulas por pontos
+const substituirVirgulasPorPontos = (numero) => {
+    if (typeof numero === 'string') {
+        return numero.replace(',', '.');
+    }
+    return numero;
+};
 
     const limite_parcelas = useMemo(() => {
         if (classesList.length > 0) {
@@ -461,10 +469,7 @@ export default function CadastroTaxa() {
                         variant="outlined"
                         value={percent ? `${taxa} %` : `R$ ${taxa}`}
                         onChange={(a) => {
-                            let value = NumberPercentMask(
-                                a.target.value,
-                                percent
-                            );
+                            let value = a.target.value;
 
                             setTaxa(value);
                             onChange(value);
@@ -518,28 +523,22 @@ export default function CadastroTaxa() {
      * @returns
      */
     function TaxaFragment({ pdv, valor_ing, show }) {
-        const [dinheiro, setDinheiro] = useState(
-            NumberPercentMask(pdv.taxa.tax_dinheiro)
-        );
+        const [dinheiro, setDinheiro] = useState(pdv.taxa.tax_dinheiro);
         const [dinheiro_perc, setDinheiro_perc] = useState(
             pdv.taxa.tax_dinheiro_perc
         );
 
-        const [credito, setCredito] = useState(
-            NumberPercentMask(pdv.taxa.tax_credito)
-        );
+        const [credito, setCredito] = useState(pdv.taxa.tax_credito);
         const [credito_perc, setCredito_perc] = useState(
             pdv.taxa.tax_credito_perc
         );
 
-        const [debito, setDebito] = useState(
-            NumberPercentMask(pdv.taxa.tax_debito)
-        );
+        const [debito, setDebito] = useState(pdv.taxa.tax_debito);
         const [debito_perc, setDebito_perc] = useState(
             pdv.taxa.tax_debito_perc
         );
 
-        const [pix, setPix] = useState(NumberPercentMask(pdv.taxa.tax_pix));
+        const [pix, setPix] = useState(pdv.taxa.tax_pix);
         const [pix_perc, setPix_perc] = useState(pdv.taxa.tax_pix_perc);
 
         const limite_parcelas = Math.floor(valor_ing);
@@ -626,7 +625,7 @@ export default function CadastroTaxa() {
                         </div>
                     </TableCell>
                     <TableCell rowSpan={rowSpan} align="center">
-                        <p>R$ {NumberPercentMask(classe.value.cla_valor, 0)}</p>
+                        <p>R$ classe.value.cla_valor</p>
                     </TableCell>
                 </TableRow>
                 {classe.value.pdvs.map((pdv, index) => (
@@ -717,11 +716,8 @@ export default function CadastroTaxa() {
                                                                 .eve_cod
                                                         );
                                                         setTaxaPadrao(
-                                                            NumberPercentMask(
                                                                 evento?.value
-                                                                    .eve_taxa_valor,
-                                                                0
-                                                            )
+                                                                    .eve_taxa_valor
                                                         );
                                                         setTaxaParcelas(
                                                             taxaParcelasList.txp_valor,
@@ -766,10 +762,8 @@ export default function CadastroTaxa() {
                                             InputLabelProps={{ shrink: true }}
                                             value={taxaPadrao}
                                             onChange={(a) => {
-                                                let value = NumberPercentMask(
-                                                    a.target.value,
-                                                    0
-                                                );
+                                                let value = 
+                                                    a.target.value
                                                 setTaxaPadrao(value);
                                                 evento.value.eve_taxa_valor =
                                                     value;
@@ -862,13 +856,13 @@ export default function CadastroTaxa() {
                                             onClick={(e) => {
                                                 const dadosTaxaParcela = {
                                                     txp_valor:
-                                                        taxaParcelasValor,
+                                                    substituirVirgulasPorPontos(taxaParcelasValor),
                                                     txp_perc: taxaParcelasPerc,
                                                 };
                                                 criarTaxaParcela(
                                                     dadosTaxaParcela
                                                 );
-                                                saveTaxa(e);
+                                                saveTaxa(substituirVirgulasPorPontos(e));
                                             }}
                                             sx={{ mt: 2, width: 100 }}
                                         >
@@ -956,11 +950,9 @@ export default function CadastroTaxa() {
                                                         }
                                                         onChange={(a) => {
                                                             let value =
-                                                                NumberPercentMask(
                                                                     a.target
-                                                                        .value,
-                                                                    dinheiro_perc
-                                                                );
+                                                                        .value
+                                                                
 
                                                             setDinheiro(value);
                                                             updateAllTax(
@@ -1004,11 +996,8 @@ export default function CadastroTaxa() {
                                                         }
                                                         onChange={(a) => {
                                                             let value =
-                                                                NumberPercentMask(
                                                                     a.target
-                                                                        .value,
-                                                                    credito_perc
-                                                                );
+                                                                        .value
 
                                                             setCredito(value);
                                                             updateAllTax(
@@ -1052,11 +1041,8 @@ export default function CadastroTaxa() {
                                                         }
                                                         onChange={(a) => {
                                                             let value =
-                                                                NumberPercentMask(
                                                                     a.target
-                                                                        .value,
-                                                                    debito_perc
-                                                                );
+                                                                        .value
 
                                                             setDebito(value);
                                                             updateAllTax(
@@ -1100,11 +1086,8 @@ export default function CadastroTaxa() {
                                                         }
                                                         onChange={(a) => {
                                                             let value =
-                                                                NumberPercentMask(
                                                                     a.target
-                                                                        .value,
-                                                                    pix_perc
-                                                                );
+                                                                        .value
 
                                                             setPix(value);
                                                             updateAllTax(
@@ -1290,7 +1273,7 @@ export default function CadastroTaxa() {
                                             onClick={() => {
                                                 const dadosRegraParcela = {
                                                     par_valor_min:
-                                                        valorMinParcela,
+                                                    substituirVirgulasPorPontos(valorMinParcela),
                                                     par_count: numMaxParcelas,
                                                 };
                                                 criarRegraParcela(
@@ -1376,7 +1359,7 @@ export default function CadastroTaxa() {
                                                     par_id: parcelaOpcao.value
                                                         .par_id,
                                                     par_valor_min:
-                                                        valorMinParcela,
+                                                    substituirVirgulasPorPontos(valorMinParcela),
                                                     par_count: numMaxParcelas,
                                                 };
                                                 atualizarRegraParcela(
