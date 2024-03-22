@@ -625,7 +625,7 @@ const substituirVirgulasPorPontos = (numero) => {
                         </div>
                     </TableCell>
                     <TableCell rowSpan={rowSpan} align="center">
-                        <p>R$ classe.value.cla_valor</p>
+                        <p>R$ {classe.value.cla_valor}</p>
                     </TableCell>
                 </TableRow>
                 {classe.value.pdvs.map((pdv, index) => (
